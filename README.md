@@ -12,7 +12,7 @@ dan prompt siap copy-paste per section.
 |---|---|
 | `CLAUDE.md` | **Ruler.** Aturan keras yang dibaca Claude Code otomatis setiap sesi. |
 | `.claude/skills/image-to-html-nojs/SKILL.md` | **Skill.** Workflow 5 langkah + checklist verifikasi. |
-| `.claude/skills/.../references/setup.md` | Boilerplate `<head>`, blok `@theme`, komponen shadcn-style. |
+| `.claude/skills/.../references/setup.md` | Boilerplate `<head>`, token `:root` + `@theme inline`, komponen shadcn-style. |
 | `.claude/skills/.../references/no-js-patterns.md` | Resep interaksi CSS-only siap copy (accordion, tabs, modal, dst). |
 | `.claude/skills/.../references/responsive.md` | Kontrak responsif: 5 lebar uji, peta runtuh grid, skala tipografi, checklist 17 poin. |
 | `.claude/skills/.../references/prompt-template.md` | Cara menulis prompt yang tahan model murah (struktur 5 blok). |
@@ -55,8 +55,8 @@ output/toko-baju/
 ├── index.html                    ← buka ini di browser, halaman penuh
 ├── NOTES.md                      ← token hasil ukur + daftar asumsi
 ├── sections/                     ← POTONGAN kode, bukan halaman
-│   ├── 01-hero/index.html        ← <header> + <section> saja, navbar menyatu
-│   ├── 02-features/index.html    ← <section> … </section>
+│   ├── 01-hero/index.html        ← token warna + <header> + <section>, navbar menyatu
+│   ├── 02-features/index.html    ← token warna + <section> … </section>
 │   └── 03-pricing/index.html
 └── prompts/
     ├── 01-hero.md                ← prompt siap paste ke AI lain
@@ -66,13 +66,28 @@ output/toko-baju/
 
 Buka `index.html` — langsung jalan, tidak perlu server, tidak perlu `npm install`.
 
-**File di `sections/` isinya potongan, bukan halaman utuh.** Tidak ada `<head>`,
-`<body>`, `<meta>`, atau `@theme` di dalamnya — semua itu cuma ada satu kali, di
-`index.html`. Isi tiap file section bisa langsung ditempel ke `index.html` tanpa
-dipotong manual, dan warnanya dijamin tidak pernah menyimpang antar section.
+**File di `sections/` isinya markup section murni.** Tidak ada `<head>`, `<body>`,
+`<meta>`, `<script>`, atau `<style>` — baris pertama langsung tag section-nya:
 
-Konsekuensinya: file section **tidak bisa di-double-click** untuk preview
-(Tailwind-nya tidak ikut). Preview selalu lewat `index.html`.
+```html
+<section class="bg-white text-neutral-900 py-16 lg:py-24">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl lg:text-5xl font-bold tracking-tight">Simple, transparent pricing</h2>
+    <div class="rounded-2xl border border-neutral-200 bg-white p-6 lg:p-8">…</div>
+  </div>
+</section>
+```
+
+**Warnanya sengaja palet bawaan Tailwind** — `bg-white`, `text-neutral-500`,
+`border-neutral-200`. Bukan token proyek seperti `bg-primary`. Alasannya: class bawaan
+selalu ada di Tailwind mana pun, jadi file section tampil hitam-putih-abu yang
+menyerupai `index.html` di preview editor, playground, atau halaman lain — tanpa satu
+baris CSS di dalamnya.
+
+**Warna penuh ada di `index.html`**, disimpan sekali di `<head>` dengan pola `:root` +
+`@theme inline`. Padanan dua sisi (`bg-white` ↔ `bg-background`, `bg-neutral-900` ↔
+`bg-primary`, …) ditulis di `NOTES.md` §Peta warna — itu yang dipakai saat menempel
+section ke `index.html`.
 
 ---
 
@@ -136,14 +151,14 @@ Model gratis kelas Gemini Flash sudah cukup. Prompt-nya memang dirancang untuk i
 
 ### Langkah 4 · Ambil kodenya
 
-Jawaban AI = satu blok kode berisi **potongan** HTML, mulai `<section` (atau
-`<header` untuk hero) sampai `</section>`. Klik tombol copy di pojok blok kode itu.
+Jawaban AI = satu blok kode berisi `<section>` sampai `</section>`, tidak lebih.
+Klik tombol copy di pojok blok kode itu.
 
 Dua hal yang sering nyelip dan harus dibuang:
 
 - Penjelasan di luar blok kode ("Berikut adalah kode HTML-nya…") — ambil isi blok kode-nya saja.
-- Pembungkus halaman (`<!doctype html>`, `<head>`, `<body>`, `<style>`) — AI melanggar
-  Blok 1. Balas: `"aturan 1: potongan saja, mulai <section, tanpa head/body/style"`.
+- Pembungkus halaman (`<!doctype html>`, `<html>`, `<head>`, `<body>`, `<style>`) — AI
+  melanggar Blok 1. Balas: `"markup section saja, mulai <section, tanpa head/body/style"`
 
 ### Langkah 5 · Timpa file section-nya
 
@@ -153,17 +168,21 @@ Paste ke:
 output/toko-baju/sections/02-features/index.html
 ```
 
-File ini isinya potongan, jadi **jangan** di-double-click untuk preview — tidak akan
-muncul stylenya. Untuk melihat hasilnya, tempel isinya ke `index.html` di posisi
-section itu, lalu buka `index.html`. Atau minta Claude:
-`"gabungkan ulang semua section ke index.html"`.
+File ini markup murni (tanpa `<script>` Tailwind), jadi double-click langsung
+menampilkan HTML polos. Preview-nya lewat preview editor / playground yang sudah
+menyediakan Tailwind — di sana tampilannya benar, hitam-putih-abu.
+
+Untuk versi berwarna penuh, tempel ke `index.html` di posisi section itu **sambil
+menerjemahkan warnanya** lewat `NOTES.md` §Peta warna. Atau minta Claude:
+`"gabungkan ulang semua section ke index.html"` — dia yang menerjemahkan.
 
 ### Kalau hasilnya meleset
 
 | Gejala | Sebabnya | Perbaikannya |
 |---|---|---|
-| Ada `<!doctype html>` / `<head>` di output | AI melanggar Blok 1 larangan 1 | Balas: `"potongan saja, mulai dari <section, tanpa head/body/style"` |
+| Ada `<!doctype html>` / `<head>` / `<style>` di output | AI melanggar Blok 1 larangan 1 | Balas: `"markup section saja, tanpa head/body/style"` |
 | Section tanpa warna saat dibuka sendiri | Normal — token ada di `index.html` | Bukan bug. Preview lewat `index.html`. |
+| Warna section beda dari yang lain | AI mengarang class warna | Balas: `"pakai persis class di kerangka Blok 2"` |
 | Muncul `<script>` toggle menu | AI melanggar Blok 1 | Balas: `"nol JavaScript. Ulangi, pakai <details>"` |
 | Masih ada `<!-- ISI:3 -->` di output | AI berhenti di tengah | Balas: `"lanjutkan, ganti semua tanda ISI yang tersisa"` |
 | Layout ditambah-tambahi sendiri | AI mengubah kerangka | Balas: `"kembalikan persis ke kerangka Blok 2, jangan tambah elemen"` |
@@ -195,12 +214,12 @@ Tidak perlu kamu sebut. Sudah tertanam di `CLAUDE.md`.
 | # | Aturan |
 |---|---|
 | 1 | **Nol JavaScript perilaku.** Interaksi pakai `<details>`, `peer` + checkbox, `:target`, `scroll-snap`. |
-| 2 | **Tailwind v4 saja.** Play CDN + `@theme`. Tanpa `tailwind.config.js`. |
+| 2 | **Tailwind v4 saja.** Play CDN + `:root` & `@theme inline` di `index.html`. Radius pakai skala bawaan. |
 | 3 | **shadcn = token + markup tulis tangan.** Bukan React, bukan `import`. |
 | 4 | **Cocokkan gambar, jangan berimprovisasi.** Yang tidak terlihat → dicatat di `NOTES.md`. |
 | 5 | **Struktur output selalu sama.** Full + per-section + prompts. |
 | 5b | **Navbar/menu/tabs bukan section.** Melebur ke file section induknya. |
-| 5c | **File section = potongan.** Tanpa `<head>`/`<body>`/`<meta>`/`@theme` — itu cuma di `index.html`. |
+| 5c | **File section = markup murni + palet bawaan.** Tanpa `<head>`/`<body>`/`<script>`/`<style>`, tanpa token proyek. Warna penuh hanya di `index.html`. |
 | 6 | **File prompt `.md`**, bukan `.txt`. |
 | 6b | **Prompt ditulis untuk model termurah.** Struktur 5 blok, pendek, nol kata sifat kualitas. |
 | 7 | **Spacing skala 4px, konsisten lintas section.** |
@@ -238,9 +257,9 @@ Detail lengkap: [`no-js-patterns.md`](.claude/skills/image-to-html-nojs/referenc
 
 ## 7. Catatan Penting
 
-**Ada satu `<script>` di `index.html`.** Itu tag CDN compiler Tailwind, bukan logika
-aplikasi. File di `sections/` nol `<script>` sama sekali. Kalau kamu mau `index.html`
-juga benar-benar nol tag `<script>`:
+**Ada satu `<script>` di setiap file.** Itu tag CDN compiler Tailwind, bukan logika
+aplikasi, dan hanya ada di `index.html`. File di `sections/` nol `<script>`.
+Kalau kamu mau benar-benar nol tag `<script>`:
 
 ```bash
 npx @tailwindcss/cli -i ./src/input.css -o ./output/<project>/styles.css --minify
