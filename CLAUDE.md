@@ -27,6 +27,11 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
    terlihat di gambar, tulis asumsinya di `NOTES.md`, jangan diam-diam mengarang.
 5. **Struktur output selalu sama** (lihat SKILL.md §Output Structure):
    `index.html` full + `sections/<nn>-<nama>/index.html` + `prompts/<nn>-<nama>.md`.
+5a. **File section = potongan HTML, bukan halaman.** `sections/<nn>-<nama>/index.html`
+   mulai langsung dari `<header>`/`<section>` dan berakhir di tag penutupnya.
+   Dilarang ada `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`,
+   `<script>`, `<style>`, atau `@theme` di dalamnya — semua itu hanya di `index.html`.
+   Prompt di `prompts/` ikut aturan ini: output-nya potongan, bukan halaman utuh.
 5b. **Hanya section halaman nyata yang dapat folder sendiri.** Navbar, menu, tabs,
    dropdown, accordion, breadcrumb, pagination, sidebar, dan komponen sejenis
    **BUKAN** section — mereka melebur ke dalam file section tempat mereka berada.
@@ -38,9 +43,14 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
 6b. **Prompt ditulis untuk model termurah.** Target: Gemini Flash kelas menghasilkan
    output identik dengan model mahal. Nol penalaran boleh dibebankan ke model —
    kerangka HTML sudah jadi dengan tanda `<!-- ISI:n -->`, class ditulis literal,
-   teks ada di tabel COPY, class dibatasi whitelist, ditutup checklist verifikasi.
-   Struktur 7 blok wajib (`references/prompt-template.md`). Nol kata sifat kualitas:
-   "modern", "rapi", "menarik", "profesional" dilarang muncul di file prompt.
+   teks ada di tabel COPY, ditutup checklist verifikasi.
+   **Struktur 5 blok wajib** — KONTRAK · KERANGKA · COPY · CEK · KUNCI
+   (`references/prompt-template.md`). Pendek, bukan panjang: kerangka ~80% isi file.
+   Nol kata sifat kualitas: "modern", "rapi", "menarik", "profesional" dilarang
+   muncul di file prompt.
+6c. **Trigger "buatkan promtingnya".** Kalimat ini dari user = perintah menulis file
+   `prompts/<nn>-<nama>.md`. Tanpa nama section → semua section. Dengan nama section
+   → satu file itu saja. Detail di SKILL.md Step 3.
 7. **Spacing itu deliverable, bukan detail.** Pakai skala 4px. Rhythm section,
    container, dan gap konsisten di semua section. Ini yang dinilai pertama.
 7b. **Responsif diukur, bukan diasumsikan.** Tiga breakpoint saja: base / `md:` ≥768
@@ -61,6 +71,7 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
 - Bilang "sudah 100% mirip" tanpa membandingkan ulang ke gambar → bandingkan dulu.
 - Gambar punya 7 section tapi output cuma 4 → kerjakan semuanya.
 - Bikin folder `sections/01-navbar/` atau `sections/xx-tabs/` → salah. Lebur ke section induknya.
+- File di `sections/` punya `<head>`, `<body>`, atau `@theme` → itu potongan, bukan halaman. Buang.
 - Prompt berisi "buat yang rapi dan menarik" → model murah mengabaikannya. Ganti jadi angka/class.
 - Prompt menyuruh model mengarang copy atau menyimpulkan class → tulis literal di tabel COPY / kerangka.
 - Hanya cek tampilan di 1440px → uji lima lebar, mulai dari 320px.
