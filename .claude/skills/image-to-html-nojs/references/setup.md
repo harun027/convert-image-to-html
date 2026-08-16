@@ -1,8 +1,11 @@
 # Setup — Tailwind v4 tanpa build, token shadcn-style
 
-## Boilerplate `<head>`
+## Boilerplate `<head>` — hanya untuk `index.html`
 
-Blok ini **identik** di `index.html` dan di setiap `sections/*/index.html`.
+Blok ini ditulis **satu kali saja**, di `index.html`. File di `sections/*/index.html`
+adalah potongan (`<header>` / `<section>` saja) dan **tidak** mengulang `<head>`,
+`<body>`, `<meta>`, maupun `@theme`.
+
 Ganti nilai `@theme` dengan hasil ukur dari gambar.
 
 ```html
@@ -60,13 +63,33 @@ Ganti nilai `@theme` dengan hasil ukur dari gambar.
   </style>
 </head>
 <body class="bg-background text-foreground font-sans antialiased">
-  <!-- section di sini -->
+
+  <!-- isi sections/01-hero/index.html ditempel di sini, apa adanya -->
+  <!-- isi sections/02-features/index.html ditempel di sini, apa adanya -->
+
 </body>
 </html>
 ```
 
 Token `@theme` otomatis jadi utility: `--color-primary` → `bg-primary`, `text-primary`,
 `border-primary`. `--radius-card` → `rounded-card`.
+
+## Bentuk file section
+
+`sections/<nn>-<nama>/index.html` = potongan HTML murni, mulai dari tag section-nya:
+
+```html
+<!-- 02-features — fragment. Tanpa <head>/<body>/@theme: itu milik index.html induk. -->
+
+<section class="py-16 md:py-24 lg:py-32">
+  …
+</section>
+```
+
+Konsekuensi yang harus disampaikan ke user: file section **tidak bisa dibuka
+langsung di browser** (tidak ada Tailwind & token di dalamnya). Preview lewat
+`index.html`. Sebagai gantinya, isinya bisa ditempel ke `index.html` tanpa dipotong
+manual, dan token warna dijamin tidak pernah menyimpang antar section.
 
 ## Kalau user minta tanpa CDN sama sekali
 

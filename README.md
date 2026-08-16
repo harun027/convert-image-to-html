@@ -15,7 +15,7 @@ dan prompt siap copy-paste per section.
 | `.claude/skills/.../references/setup.md` | Boilerplate `<head>`, blok `@theme`, komponen shadcn-style. |
 | `.claude/skills/.../references/no-js-patterns.md` | Resep interaksi CSS-only siap copy (accordion, tabs, modal, dst). |
 | `.claude/skills/.../references/responsive.md` | Kontrak responsif: 5 lebar uji, peta runtuh grid, skala tipografi, checklist 17 poin. |
-| `.claude/skills/.../references/prompt-template.md` | Cara menulis prompt yang tahan model murah (struktur 8 blok). |
+| `.claude/skills/.../references/prompt-template.md` | Cara menulis prompt yang tahan model murah (struktur 5 blok). |
 | `_template/` | Contoh output jadi. Jangan diedit — dipakai sebagai acuan bentuk. |
 | `output/<nama-project>/` | Hasil kerja kamu. Dibuat otomatis. |
 
@@ -54,9 +54,9 @@ ini desktop, ini mobile. desktop yang jadi acuan. nama project: toko-baju
 output/toko-baju/
 ├── index.html                    ← buka ini di browser, halaman penuh
 ├── NOTES.md                      ← token hasil ukur + daftar asumsi
-├── sections/
-│   ├── 01-hero/index.html        ← navbar + hero, bisa dibuka sendiri
-│   ├── 02-features/index.html
+├── sections/                     ← POTONGAN kode, bukan halaman
+│   ├── 01-hero/index.html        ← <header> + <section> saja, navbar menyatu
+│   ├── 02-features/index.html    ← <section> … </section>
 │   └── 03-pricing/index.html
 └── prompts/
     ├── 01-hero.md                ← prompt siap paste ke AI lain
@@ -66,34 +66,129 @@ output/toko-baju/
 
 Buka `index.html` — langsung jalan, tidak perlu server, tidak perlu `npm install`.
 
+**File di `sections/` isinya potongan, bukan halaman utuh.** Tidak ada `<head>`,
+`<body>`, `<meta>`, atau `@theme` di dalamnya — semua itu cuma ada satu kali, di
+`index.html`. Isi tiap file section bisa langsung ditempel ke `index.html` tanpa
+dipotong manual, dan warnanya dijamin tidak pernah menyimpang antar section.
+
+Konsekuensinya: file section **tidak bisa di-double-click** untuk preview
+(Tailwind-nya tidak ikut). Preview selalu lewat `index.html`.
+
 ---
 
-## 3. Cara Pakai Folder `prompts/`
+## 3. Minta Prompting-nya
 
-Ini bagian yang bikin kamu tidak tergantung Claude terus.
+Cukup ketik kalimat ini ke Claude Code:
 
-Setiap file `.md` di `prompts/` berisi satu blok copy-paste yang sudah dirancang
-supaya **model AI termurah pun keluar hasil yang sama dengan model mahal**.
+```
+buatkan promtingnya
+```
 
-**Alurnya:**
+Itu perintah resminya. Claude akan menulis satu file `.md` per section ke
+`prompts/`, format 5 blok, siap copy-paste ke AI lain.
 
-1. Buka misalnya `prompts/02-features.md`.
-2. Copy semua isi antara `▼ COPY-PASTE MULAI DARI SINI` dan `▲ COPY-PASTE SAMPAI SINI`.
-3. Paste ke Gemini Flash / ChatGPT / AI apa pun, lampirkan gambar section itu.
-4. Hasilnya = file HTML lengkap yang langsung nyambung dengan section lain
-   (token `@theme`-nya sama persis).
-5. Simpan ke `sections/02-features/index.html`, timpa yang lama.
+| Yang kamu ketik | Yang dibuat |
+|---|---|
+| `buatkan promtingnya` | Semua section yang ada di `sections/` |
+| `buatkan promtingnya untuk 03-pricing` | Satu file itu saja |
+| `buatkan promtingnya` (baru punya gambar, belum ada section) | Claude ukur token dari gambar dulu, baru tulis prompt-nya |
 
-**Kenapa bisa sama dengan model mahal?** Prompt-nya tidak menyuruh model berpikir.
-Kerangka HTML sudah jadi, model tinggal mengisi tanda `<!-- ISI:n -->`; semua teks
-ada di tabel COPY; class dibatasi whitelist; ditutup checklist yang model cek sendiri.
+---
+
+## 4. Cara Copas Hasil Prompting-nya
+
+Ini bagian yang bikin kamu tidak tergantung Claude terus. Lima langkah.
+
+### Langkah 1 · Buka file prompt-nya
+
+```
+output/toko-baju/prompts/02-features.md
+```
+
+Buka di VS Code, Notepad, atau langsung di GitHub — semua sama saja, isinya teks biasa.
+
+### Langkah 2 · Blok teks di antara dua penanda
+
+Di dalam file ada dua baris penanda:
+
+```
+## ▼ COPY MULAI          ← mulai blok dari BAWAH baris ini
+   … isi prompt …
+## ▲ COPY SELESAI        ← berhenti di ATAS baris ini
+```
+
+Copy semua yang ada di antaranya. **Jangan** ikut mengcopy front-matter
+(`---` … `---` di paling atas) dan judul `# Prompt — Section 02: …` —
+itu catatan untuk kamu, bukan untuk AI.
+
+> Cara cepat di VS Code: klik di awal baris setelah `▼ COPY MULAI`,
+> scroll ke `▲ COPY SELESAI`, lalu `Shift + Klik` di akhir baris sebelumnya → `Ctrl + C`.
+
+### Langkah 3 · Paste ke AI mana pun + lampirkan gambar
+
+Buka Gemini / ChatGPT / DeepSeek / Claude — bebas, yang gratis pun cukup.
+
+1. Lampirkan gambar section itu (crop dari desain aslinya, misal `refs/02-features.png`).
+2. Paste prompt yang tadi di-copy.
+3. Kirim.
+
+Model gratis kelas Gemini Flash sudah cukup. Prompt-nya memang dirancang untuk itu.
+
+### Langkah 4 · Ambil kodenya
+
+Jawaban AI = satu blok kode berisi **potongan** HTML, mulai `<section` (atau
+`<header` untuk hero) sampai `</section>`. Klik tombol copy di pojok blok kode itu.
+
+Dua hal yang sering nyelip dan harus dibuang:
+
+- Penjelasan di luar blok kode ("Berikut adalah kode HTML-nya…") — ambil isi blok kode-nya saja.
+- Pembungkus halaman (`<!doctype html>`, `<head>`, `<body>`, `<style>`) — AI melanggar
+  Blok 1. Balas: `"aturan 1: potongan saja, mulai <section, tanpa head/body/style"`.
+
+### Langkah 5 · Timpa file section-nya
+
+Paste ke:
+
+```
+output/toko-baju/sections/02-features/index.html
+```
+
+File ini isinya potongan, jadi **jangan** di-double-click untuk preview — tidak akan
+muncul stylenya. Untuk melihat hasilnya, tempel isinya ke `index.html` di posisi
+section itu, lalu buka `index.html`. Atau minta Claude:
+`"gabungkan ulang semua section ke index.html"`.
+
+### Kalau hasilnya meleset
+
+| Gejala | Sebabnya | Perbaikannya |
+|---|---|---|
+| Ada `<!doctype html>` / `<head>` di output | AI melanggar Blok 1 larangan 1 | Balas: `"potongan saja, mulai dari <section, tanpa head/body/style"` |
+| Section tanpa warna saat dibuka sendiri | Normal — token ada di `index.html` | Bukan bug. Preview lewat `index.html`. |
+| Muncul `<script>` toggle menu | AI melanggar Blok 1 | Balas: `"nol JavaScript. Ulangi, pakai <details>"` |
+| Masih ada `<!-- ISI:3 -->` di output | AI berhenti di tengah | Balas: `"lanjutkan, ganti semua tanda ISI yang tersisa"` |
+| Layout ditambah-tambahi sendiri | AI mengubah kerangka | Balas: `"kembalikan persis ke kerangka Blok 2, jangan tambah elemen"` |
+| Berulang kali jelek | Prompt-nya masih menyisakan celah tebakan | Kirim output jeleknya ke Claude → titik yang bikin AI menebak akan ditambal jadi nilai literal |
+
+### Kenapa model murah bisa sebagus model mahal?
+
+Prompt-nya tidak menyuruh model berpikir sama sekali:
+
+- Kerangka HTML sudah jadi — model cuma mengganti tanda `<!-- ISI:n -->`.
+- Semua teks tampilan ada di tabel COPY, tidak ada yang dikarang.
+- Class ditulis literal di kerangka, bukan disimpulkan.
+- Ditutup 6 poin cek yang bisa diverifikasi model sendiri.
+
 Nol tempat untuk menebak = nol tempat untuk salah.
+
+**Formatnya sengaja pendek.** Prompt panjang bukan prompt kuat — bagian tengah
+prompt panjang justru dilewati model murah. Yang bekerja cuma kerangka dan tabel
+COPY, jadi sisanya dipangkas: 5 blok, tidak lebih.
 
 Contoh jadi: [`_template/prompts/01-hero.md`](_template/prompts/01-hero.md)
 
 ---
 
-## 4. Aturan yang Berlaku Otomatis
+## 5. Aturan yang Berlaku Otomatis
 
 Tidak perlu kamu sebut. Sudah tertanam di `CLAUDE.md`.
 
@@ -105,8 +200,9 @@ Tidak perlu kamu sebut. Sudah tertanam di `CLAUDE.md`.
 | 4 | **Cocokkan gambar, jangan berimprovisasi.** Yang tidak terlihat → dicatat di `NOTES.md`. |
 | 5 | **Struktur output selalu sama.** Full + per-section + prompts. |
 | 5b | **Navbar/menu/tabs bukan section.** Melebur ke file section induknya. |
+| 5c | **File section = potongan.** Tanpa `<head>`/`<body>`/`<meta>`/`@theme` — itu cuma di `index.html`. |
 | 6 | **File prompt `.md`**, bukan `.txt`. |
-| 6b | **Prompt ditulis untuk model termurah.** Struktur 7 blok, nol kata sifat kualitas. |
+| 6b | **Prompt ditulis untuk model termurah.** Struktur 5 blok, pendek, nol kata sifat kualitas. |
 | 7 | **Spacing skala 4px, konsisten lintas section.** |
 | 7b | **Responsif diuji di 320 / 375 / 768 / 1024 / 1440px**, lulus checklist 17 poin. |
 | 8 | **Tidak menyentuh backend.** |
@@ -114,7 +210,7 @@ Tidak perlu kamu sebut. Sudah tertanam di `CLAUDE.md`.
 
 ---
 
-## 5. Yang Bisa & Tidak Bisa Tanpa JS
+## 6. Yang Bisa & Tidak Bisa Tanpa JS
 
 | Bisa | Polanya |
 |---|---|
@@ -140,10 +236,11 @@ Detail lengkap: [`no-js-patterns.md`](.claude/skills/image-to-html-nojs/referenc
 
 ---
 
-## 6. Catatan Penting
+## 7. Catatan Penting
 
-**Ada satu `<script>` di setiap file.** Itu tag CDN compiler Tailwind, bukan logika
-aplikasi. Kalau kamu mau benar-benar nol tag `<script>`:
+**Ada satu `<script>` di `index.html`.** Itu tag CDN compiler Tailwind, bukan logika
+aplikasi. File di `sections/` nol `<script>` sama sekali. Kalau kamu mau `index.html`
+juga benar-benar nol tag `<script>`:
 
 ```bash
 npx @tailwindcss/cli -i ./src/input.css -o ./output/<project>/styles.css --minify
@@ -159,7 +256,7 @@ struktur visual komponennya, ditulis tangan sebagai HTML + class Tailwind.
 
 ---
 
-## 7. Kalau Hasilnya Belum Pas
+## 8. Kalau Hasilnya Belum Pas
 
 | Masalah | Yang dilakukan |
 |---|---|
@@ -174,12 +271,15 @@ struktur visual komponennya, ditulis tangan sebagai HTML + class Tailwind.
 
 ---
 
-## 8. Perintah Cepat
+## 9. Perintah Cepat
 
 ```
 convert gambar ini jadi web, nama project: <nama>     # bikin dari nol
+buatkan promtingnya                                    # tulis semua file prompts/
+buatkan promtingnya untuk 03-pricing                   # satu file prompt saja
 regenerate section 03-pricing                          # ulang satu section
 tambahkan section testimonials di antara 03 dan 04     # sisipkan section
 cek ulang semua section, pastikan nol JS               # audit
 samakan spacing semua section                          # rapikan ritme
+gabungkan ulang semua section ke index.html            # rakit halaman penuh
 ```
