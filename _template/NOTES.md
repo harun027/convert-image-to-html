@@ -5,14 +5,17 @@ Nilai di bawah adalah contoh; ganti dengan hasil ukur dari gambar user.
 
 ## 1. Palette
 
-| Peran | Token | Nilai (light) | Nilai (dark) |
+Nilai mentah di `:root` (elemen `<html>`), dipetakan ke utility lewat `@theme inline`.
+Hanya ada di `<head>` `index.html`.
+
+| Peran | Var di `:root` | Nilai (light) | Nilai (dark) |
 |---|---|---|---|
-| Background | `--color-background` | `oklch(1 0 0)` | `oklch(0.145 0 0)` |
-| Teks utama | `--color-foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
-| Teks sekunder | `--color-muted-foreground` | `oklch(0.556 0 0)` | `oklch(0.708 0 0)` |
-| Permukaan | `--color-muted` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` |
-| Aksen / tombol | `--color-primary` | `oklch(0.205 0 0)` | `oklch(0.985 0 0)` |
-| Border | `--color-border` | `oklch(0.922 0 0)` | `oklch(0.269 0 0)` |
+| Background | `--background` | `oklch(1 0 0)` | `oklch(0.145 0 0)` |
+| Teks utama | `--foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
+| Teks sekunder | `--muted-foreground` | `oklch(0.556 0 0)` | `oklch(0.708 0 0)` |
+| Permukaan | `--muted` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` |
+| Aksen / tombol | `--primary` | `oklch(0.205 0 0)` | `oklch(0.985 0 0)` |
+| Border | `--border` | `oklch(0.922 0 0)` | `oklch(0.269 0 0)` |
 
 ## 2. Typography
 
@@ -53,8 +56,10 @@ sempit untuk 3 link + 2 tombol tanpa berdesakan.
 
 ## 5. Radius & border
 
-- Card: `0.75rem` · Tombol/input: `0.5rem` · Pill: full
-- Border: 1px, warna `--color-border`
+Skala bawaan Tailwind, tanpa token kustom.
+
+- Card: `rounded-xl` (0.75rem) · Tombol/input: `rounded-lg` (0.5rem) · Pill: `rounded-full`
+- Border: 1px, `--border` di `index.html` / `border-neutral-200` di file section
 
 ## 6. Shadow & depth
 
@@ -74,3 +79,23 @@ dropdown, accordion) melebur ke file section induknya — tidak dapat folder sen
 - Hover state tombol → `hover:opacity-90` / `hover:bg-muted`.
 - Dark mode mengikuti OS; tidak ada tombol toggle di gambar.
 - Isi visual hero diganti placeholder `aspect-[4/3] bg-muted`.
+
+## 8. Peta warna: file section ↔ index.html
+
+File di `sections/` memakai **palet bawaan Tailwind** supaya tampil benar di mana pun
+tanpa `<style>`. `index.html` memakai token proyek. Saat menempel section ke
+`index.html`, terjemahkan lewat tabel ini.
+
+| Di file section (bawaan) | Di `index.html` (token) |
+|---|---|
+| `bg-white` / `bg-white/80` | `bg-background` / `bg-background/80` |
+| `text-neutral-900` | `text-foreground` |
+| `text-neutral-500` | `text-muted-foreground` |
+| `border-neutral-200` | `border-border` |
+| `bg-neutral-100` | `bg-muted` |
+| `bg-neutral-900` + `text-white` | `bg-primary` + `text-primary-foreground` |
+| `outline-neutral-400` | `outline-ring` |
+
+Palet bawaan tidak punya dark mode otomatis — di file section tampilannya selalu
+terang. Dark mode hanya berlaku di `index.html`, lewat `@media (prefers-color-scheme: dark)`
+yang menimpa `:root`.

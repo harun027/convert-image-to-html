@@ -16,7 +16,9 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
    adalah tag CDN compiler Tailwind (lihat rule 2).
 2. **Tailwind CSS v4 saja.** Mode default: Play CDN satu file —
    `<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>`
-   plus `<style type="text/tailwindcss">` untuk `@theme`.
+   plus `<style type="text/tailwindcss">` berisi `:root` (nilai mentah) + `@theme inline`
+   (pemetaan ke utility) — pola shadcn v4. `@theme` polos membekukan nilai dan mematikan
+   dark mode; `@theme` di dalam `@media` tidak sah.
    Tidak ada Tailwind v3 syntax (`tailwind.config.js`, `theme.extend`, `@tailwind base`).
 3. **shadcn = token + markup, bukan React.** shadcn/ui tidak bisa dipakai di HTML murni.
    Yang direplikasi adalah design token-nya (`--color-background`, `--color-primary`,
@@ -27,11 +29,20 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
    terlihat di gambar, tulis asumsinya di `NOTES.md`, jangan diam-diam mengarang.
 5. **Struktur output selalu sama** (lihat SKILL.md §Output Structure):
    `index.html` full + `sections/<nn>-<nama>/index.html` + `prompts/<nn>-<nama>.md`.
-5a. **File section = potongan HTML, bukan halaman.** `sections/<nn>-<nama>/index.html`
-   mulai langsung dari `<header>`/`<section>` dan berakhir di tag penutupnya.
-   Dilarang ada `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`,
-   `<script>`, `<style>`, atau `@theme` di dalamnya — semua itu hanya di `index.html`.
-   Prompt di `prompts/` ikut aturan ini: output-nya potongan, bukan halaman utuh.
+5a. **File section = markup section murni.** `sections/<nn>-<nama>/index.html` mulai
+   dari tag akar section dan berakhir di tag penutupnya. Dilarang ada `<!doctype>`,
+   `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`, `<script>`, `<style>`, `@theme`,
+   atau komentar penanda. Tag akar wajib membawa warnanya sendiri
+   (`bg-background text-foreground`, atau `bg-muted`/`bg-card` sesuai gambar).
+   Radius pakai skala bawaan Tailwind (`rounded-lg`/`rounded-xl`/`rounded-2xl`/
+   `rounded-full`) — dilarang bikin token radius kustom. Prompt di `prompts/` ikut
+   bentuk ini persis.
+5d. **Warna di file section = palet bawaan Tailwind.** `bg-white`, `text-neutral-900`,
+   `text-neutral-500`, `border-neutral-200`, `bg-neutral-100`, `bg-neutral-900`, dan
+   padanan bawaan terdekat untuk aksen. Token proyek (`bg-primary`, `bg-background`,
+   `bg-brand-*`) dan `var(--…)` **dilarang** di `sections/` — mereka hanya hidup di
+   `index.html`. Peta padanan dua sisi wajib ditulis di `NOTES.md` §Peta warna, dan
+   dipakai saat menempel section ke `index.html`.
 5b. **Hanya section halaman nyata yang dapat folder sendiri.** Navbar, menu, tabs,
    dropdown, accordion, breadcrumb, pagination, sidebar, dan komponen sejenis
    **BUKAN** section — mereka melebur ke dalam file section tempat mereka berada.
@@ -65,13 +76,18 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
 
 - Menulis `<script>` untuk buka/tutup menu, tab, modal, atau accordion → pakai
   `<details>`, `peer` + checkbox, atau `:target`.
-- Pakai `tailwind.config = {...}` → itu v3. Pakai `@theme` di CSS.
-- Warna hardcode `#hex` acak per komponen → semua warna harus lewat token `@theme`.
+- Pakai `tailwind.config = {...}` → itu v3. Pakai `:root` + `@theme inline` di CSS.
+- Warna hardcode `#hex` acak per komponen → semua warna harus lewat token `:root`.
+- Pakai `@theme { … }` polos untuk warna → nilai beku, dark mode mati. Wajib `@theme inline`.
 - Section dengan padding beda-beda tanpa alasan → samakan ke skala.
 - Bilang "sudah 100% mirip" tanpa membandingkan ulang ke gambar → bandingkan dulu.
 - Gambar punya 7 section tapi output cuma 4 → kerjakan semuanya.
 - Bikin folder `sections/01-navbar/` atau `sections/xx-tabs/` → salah. Lebur ke section induknya.
-- File di `sections/` punya `<head>`, `<body>`, atau `@theme` → itu potongan, bukan halaman. Buang.
+- File di `sections/` punya `<head>`, `<body>`, `<script>`, atau `<style>` → itu markup murni. Buang.
+- Tag akar section tanpa `bg-*`/`text-*` → warnanya menggantung ke `<body>`. Tambahkan.
+- Token proyek atau `var(--…)` dipakai di file `sections/` → tampil tanpa warna di luar `index.html`. Pakai palet bawaan.
+- Tempel section ke `index.html` tanpa menerjemahkan warna → halaman penuh jadi abu-abu.
+- Bikin token radius kustom (`rounded-card`, `--radius-btn`) → pakai skala bawaan Tailwind.
 - Prompt berisi "buat yang rapi dan menarik" → model murah mengabaikannya. Ganti jadi angka/class.
 - Prompt menyuruh model mengarang copy atau menyimpulkan class → tulis literal di tabel COPY / kerangka.
 - Hanya cek tampilan di 1440px → uji lima lebar, mulai dari 320px.

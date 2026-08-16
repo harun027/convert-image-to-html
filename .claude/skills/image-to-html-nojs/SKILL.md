@@ -75,25 +75,70 @@ Aturan peleburan:
 Jadi `01-hero/index.html` berisi `<header>` **dan** `<section>` hero dalam satu file.
 Jangan pernah bikin `sections/01-navbar/` atau `sections/xx-tabs/`.
 
-### Step 2 — TOKENIZE: satu `@theme` untuk semua
+### Step 2 — TOKENIZE: `:root` + `@theme inline`
 
-Hasil Step 1 dijadikan satu blok `@theme` (lihat `references/setup.md`).
-Blok ini **identik di semua file** — `index.html` dan setiap `sections/*/index.html`.
-Satu sumber kebenaran; tidak ada warna hardcode di markup.
+Hasil Step 1 ditulis dengan pola shadcn/Tailwind v4 — tiga blok, bukan satu
+(boilerplate lengkap di `references/setup.md`):
+
+```css
+:root { --primary: oklch(0.205 0 0); --border: … }              /* nilai mentah, di elemen <html> */
+@media (prefers-color-scheme: dark) { :root { --primary: … } }  /* timpa nilai mentahnya */
+@theme inline { --color-primary: var(--primary); … }            /* petakan ke utility */
+```
+
+Tiga hal yang mengikat:
+
+- **`inline` wajib.** Tanpa itu Tailwind membekukan nilai saat kompilasi, `bg-primary`
+  keluar warna mati, dan override `:root` untuk dark mode diam-diam tidak jalan.
+- **`@theme` tidak sah di dalam `@media`** — hanya di level teratas. Override dark mode
+  selalu lewat `:root`, bukan `@theme`.
+- **Radius tidak ditokenkan.** Pakai skala bawaan Tailwind langsung di markup
+  (`rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-full`).
+
+Blok ini ada **hanya di `index.html`**. File section tidak mengulanginya —
+mereka cuma memakai class hasilnya (`bg-primary`, `border-border`, …).
 
 ### Step 3 — BUILD per section
 
 Untuk tiap section, urut dari `01`:
 
-1. Tulis `sections/<nn>-<nama>/index.html` — **potongan HTML saja**, bukan halaman
-   utuh. Mulai langsung dari `<header>`/`<section>`, akhiri di tag penutupnya.
-   Tanpa `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`, `<script>`,
-   `<style>`, `@theme` — semua itu hanya ada di `index.html` induk.
-   Baris pertama: komentar penanda, mis.
-   `<!-- 02-features — fragment. Tanpa <head>/<body>/@theme: itu milik index.html induk. -->`
+1. Tulis `sections/<nn>-<nama>/index.html` — **markup section murni, tidak lebih.**
+   Baris pertama langsung tag akarnya, baris terakhir tag penutupnya.
 
-   Konsekuensinya file section tidak bisa dibuka langsung di browser. Itu memang
-   trade-off-nya — sampaikan ke user, dan arahkan preview lewat `index.html`.
+   ```html
+   <section class="bg-background text-foreground py-16 md:py-24 lg:py-32">
+     <div class="mx-auto max-w-7xl px-6 lg:px-8">
+       …
+     </div>
+   </section>
+   ```
+
+   Dilarang ada di file ini: `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`,
+   `<body>`, `<script>`, `<style>`, `@theme`, dan komentar penanda apa pun.
+   Semua itu milik `index.html`.
+
+   Dua aturan yang bikin potongan ini berdiri sendiri secara visual:
+
+   - **Warna pakai palet bawaan Tailwind, bukan token proyek.** `bg-white`,
+     `text-neutral-900`, `text-neutral-500`, `border-neutral-200`, `bg-neutral-100`,
+     `bg-neutral-900`. Token proyek (`bg-primary`, `bg-background`, `bg-brand-*`)
+     hanya ada di `index.html` — kalau dipakai di file section, section itu tampil
+     tanpa warna di mana pun token-nya tidak dimuat. Palet bawaan selalu ada.
+     Warna aksen yang bukan abu-abu → padanan bawaan terdekat (`bg-blue-500`,
+     `bg-amber-300`). Nol `var(--…)` di file section.
+   - **Tag akar membawa warnanya sendiri:** `bg-white text-neutral-900`
+     (atau `bg-neutral-100`/`bg-neutral-950` kalau section itu memang beda dari gambar).
+     Section tidak boleh menggantungkan warna dasarnya pada `<body>`.
+   - **Radius pakai skala bawaan Tailwind** — `rounded-lg`, `rounded-xl`,
+     `rounded-2xl`, `rounded-full`. Jangan bikin token radius kustom
+     (`rounded-card`, `rounded-btn`); itu satu lapis tak perlu antara gambar dan kode.
+
+   Hasilnya: file section tampil hitam-putih-abu yang menyerupai `index.html`, di
+   editor mana pun, tanpa satu baris CSS di dalamnya. Warna penuh hanya di `index.html`.
+
+   **Wajib: tulis peta padanannya di `NOTES.md`** (§Peta warna) — dua kolom, bawaan ↔
+   token. Tanpa peta itu, assemble jadi menebak-nebak.
+
 2. Interaksi apa pun → pakai pola CSS-only dari `references/no-js-patterns.md`.
    Kalau tidak ada pola yang cocok, sederhanakan desainnya, **jangan tambah JS**.
 3. Tulis `prompts/<nn>-<nama>.md` — prompt siap copy-paste untuk regenerate section
@@ -125,14 +170,16 @@ Selesai → sebutkan path file yang dibuat dan ingatkan penanda
 
 ### Step 4 — ASSEMBLE
 
-`index.html` = satu `<head>` + satu `@theme` (boilerplate di `references/setup.md`),
-lalu isi tiap file section ditempel berurutan ke dalam `<body>` **apa adanya**.
+`index.html` = satu `<head>` + satu blok token (boilerplate di `references/setup.md`),
+lalu markup tiap section ditempel berurutan ke dalam `<body>` **apa adanya**.
 
 - Urutan sesuai nomor section.
-- Tempel utuh — jangan potong, jangan reformat, jangan ubah class atau `id`. Isi
-  `sections/<nn>/index.html` dan potongan di `index.html` harus identik; satu-satunya
-  beda yang boleh ada adalah komentar (penanda fragment di file section, pemisah
-  `<!-- ══ nn · NAMA ══ -->` di `index.html`).
+- Tempel utuh — jangan potong, jangan reformat, jangan ubah struktur, class layout,
+  atau `id`.
+- **Terjemahkan warnanya** lewat peta di `NOTES.md` §Peta warna: `bg-white` →
+  `bg-background`, `bg-neutral-900` → `bg-primary`, dst. Ini satu-satunya perbedaan
+  yang boleh ada antara file section dan potongan di `index.html` (selain komentar
+  pemisah `<!-- ══ nn · NAMA ══ -->`). Kalau ada beda lain, salah satunya basi.
 - `id` section dan anchor `href="#..."` ditulis di file section, bukan ditambahkan
   saat assemble. Kalau ditambahkan belakangan, kedua file langsung menyimpang.
 - Cek jarak antar section konsisten setelah digabung.
@@ -144,9 +191,14 @@ Buka gambar lagi, banding baris per baris:
 - [ ] Semua section di gambar ada di output — tidak ada yang dilewat.
 - [ ] Urutan elemen dalam tiap section sama.
 - [ ] Warna, radius, shadow, dan berat font cocok.
-- [ ] Grep hasil: tidak ada `onclick`, `addEventListener`, `<script>` selain CDN Tailwind di `index.html`.
+- [ ] Grep hasil: tidak ada `onclick`, `addEventListener`, `<script>` selain CDN Tailwind.
 - [ ] Grep `sections/`: nol `<!doctype`, `<html`, `<head`, `<meta`, `<title`, `<body`, `<script`, `<style`, `@theme`.
-      Tiap file mulai dari tag section-nya (setelah komentar penanda).
+      Tiap file mulai dari tag akar section-nya.
+- [ ] Tag akar tiap section membawa warna sendiri (`bg-*` + `text-*`), tidak menggantung ke `<body>`.
+- [ ] Grep `sections/`: nol token proyek (`bg-primary`, `bg-background`, `bg-brand-*`, `border-border`, `text-muted-foreground`) dan nol `var(--`.
+- [ ] `NOTES.md` punya §Peta warna, dan tiap baris di dalamnya benar-benar dipakai di kedua file.
+- [ ] `index.html` memakai `@theme inline` (bukan `@theme` polos), dan nol `@theme` di dalam `@media`.
+- [ ] Radius memakai skala bawaan (`rounded-lg`/`rounded-xl`/`rounded-2xl`/`rounded-full`), nol token radius kustom.
 - [ ] **Lulus checklist responsif 17 poin** di `references/responsive.md` §9, diuji di
       **320 / 375 / 768 / 1024 / 1440px**. Ini bukan opsional — layout yang pecah di
       320px atau melebar tanpa batas di 1440px dihitung gagal, sebagus apa pun di 1440.
@@ -162,10 +214,10 @@ Ada yang gagal → perbaiki. Jangan lapor "100% mirip" sebelum checklist ini lul
 
 ```
 output/<nama-project>/
-├── index.html                    # SATU-SATUNYA halaman utuh: <head>, @theme, semua section
+├── index.html                    # SATU-SATUNYA halaman utuh: <head>, token, semua section
 ├── NOTES.md                      # token hasil Step 1 + daftar asumsi
-├── sections/                     # POTONGAN saja — tanpa <head>/<body>/@theme
-│   ├── 01-hero/index.html        # <header> + <section>, navbar MENYATU di satu file
+├── sections/                     # MARKUP MURNI — tanpa <head>/<body>/<script>/<style>
+│   ├── 01-hero/index.html        # <header> + <section>, navbar MENYATU
 │   ├── 02-features/index.html    # <section> … </section>
 │   └── 03-pricing/index.html     # tabs harga menyatu di sini
 └── prompts/
@@ -190,7 +242,8 @@ rapi di editor maupun GitHub. `.txt` tidak memberi satu pun dari itu.
 | Kebutuhan | Pakai ini | Jangan |
 |---|---|---|
 | Setup Tailwind | `@tailwindcss/browser@4` + `<style type="text/tailwindcss">` | `tailwind.config.js`, `@tailwind base` |
-| Token warna | `@theme { --color-primary: … }` | hex acak di class |
+| Token warna | `:root { --primary: … }` + `@theme inline` di `index.html` | hex acak di class, `@theme` polos |
+| Radius | `rounded-lg` / `rounded-xl` / `rounded-2xl` | token kustom `rounded-card` |
 | Accordion / FAQ | `<details><summary>` | script toggle |
 | Menu mobile | `<details>` atau checkbox + `peer` | script toggle |
 | Tabs | radio + `peer-checked:` | script |
@@ -243,11 +296,17 @@ Peta runtuh grid, titik rawan pecah, dan checklist 17 poin: `references/responsi
 | Nav desktop muncul di `md:` | Terlalu sempit di 768px. Tahan sampai `lg:`. |
 | Tombol `py-2` tanpa `min-h-11` | Tinggi ~36px, di bawah ambang sentuh 44px. |
 | Kartu paragraf jadi 2 kolom di 375px | Baris terlalu pendek. Tunggu `md:`. |
-| Pakai Tailwind v3 config | v4 tidak punya file config. Semua token di `@theme`. |
+| Pakai Tailwind v3 config | v4 tidak punya file config. Token di `:root` + `@theme inline`. |
 | Coba `import { Button } from "@/components/ui/button"` | shadcn itu React. Tulis tangan markup-nya + token-nya. |
 | Tambah JS "cuma untuk mobile menu" | `<details>` sudah cukup. Nol JS artinya nol. |
-| File section punya `<head>`/`<body>`/`@theme` | Itu potongan, bukan halaman. Mulai dari tag section-nya. `@theme` hanya di `index.html`. |
-| Prompt menyuruh AI keluarkan `<!doctype html>` | Output prompt = potongan. Mulai `<header`/`<section`, akhiri tag penutupnya. |
+| File section punya `<head>`/`<body>`/`<script>`/`<style>` | Itu markup section murni. Mulai dari tag akarnya. |
+| Tag akar section tanpa `bg-*`/`text-*` | Warna menggantung ke `<body>`. Section harus bawa warnanya sendiri. |
+| Token proyek (`bg-primary`, `var(--x)`) dipakai di file section | Tampil tanpa warna di luar `index.html`. Pakai palet bawaan. |
+| Tempel section ke `index.html` tanpa terjemah warna | Halaman penuh jadi abu-abu. Jalankan peta di `NOTES.md`. |
+| Bikin token radius kustom (`rounded-card`) | Pakai skala bawaan: `rounded-lg`, `rounded-xl`, `rounded-2xl`. |
+| Pakai `@theme` polos, bukan `@theme inline` | Nilai beku saat kompilasi → dark mode diam-diam mati. `inline` wajib. |
+| `@theme` ditaruh di dalam `@media` | Tidak sah. Override dark mode lewat `:root`. |
+| Prompt menyuruh AI keluarkan `<!doctype html>` atau `<style>` | Output prompt = markup section murni. |
 | Bikin folder `01-navbar/` atau `xx-tabs/` | Bukan section. Lebur ke file section induknya. |
 | Prompt ditambah whitelist class / tabel responsif | Sudah terwakili kerangka. 5 blok saja. |
 | Prompt panjang dikira prompt kuat | Yang bekerja cuma kerangka + tabel COPY. Sisanya dilewati model murah. |
@@ -258,7 +317,7 @@ Peta runtuh grid, titik rawan pecah, dan checklist 17 poin: `references/responsi
 
 ## References
 
-- `references/setup.md` — boilerplate `<head>`, blok `@theme`, token shadcn-style
+- `references/setup.md` — boilerplate `<head>`, token `:root` + `@theme inline` (pola shadcn v4)
 - `references/no-js-patterns.md` — resep interaksi CSS-only (copy-paste siap pakai)
 - `references/responsive.md` — kontrak responsif: 5 lebar uji, peta runtuh grid, skala tipografi, checklist 17 poin
 - `references/prompt-template.md` — cara menulis prompt yang tahan model murah (struktur 5 blok)

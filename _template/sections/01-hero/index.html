@@ -1,47 +1,44 @@
-<!-- 01-hero — fragment. Tanpa <head>/<body>/@theme: itu milik index.html induk.
-     Navbar MENYATU di sini, bukan folder terpisah. Preview lewat index.html. -->
-
-<header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
+<header class="sticky top-0 z-40 border-b border-neutral-200 bg-white/80 text-neutral-900 backdrop-blur">
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
     <a href="#" class="flex items-center gap-2 text-base font-semibold tracking-tight">
-      <span class="grid size-8 place-items-center rounded-btn bg-primary text-primary-foreground">◆</span>
+      <span class="grid size-8 place-items-center rounded-lg bg-neutral-900 text-white">◆</span>
       Acme
     </a>
 
     <nav class="hidden lg:block">
-      <ul class="flex items-center gap-8 text-sm text-muted-foreground">
-        <li><a href="#hero" class="transition-colors hover:text-foreground">Produk</a></li>
-        <li><a href="#hero" class="transition-colors hover:text-foreground">Harga</a></li>
-        <li><a href="#hero" class="transition-colors hover:text-foreground">Dokumentasi</a></li>
+      <ul class="flex items-center gap-8 text-sm text-neutral-500">
+        <li><a href="#hero" class="transition-colors hover:text-neutral-900">Produk</a></li>
+        <li><a href="#hero" class="transition-colors hover:text-neutral-900">Harga</a></li>
+        <li><a href="#hero" class="transition-colors hover:text-neutral-900">Dokumentasi</a></li>
       </ul>
     </nav>
 
     <div class="hidden items-center gap-3 lg:flex">
-      <a href="#" class="inline-flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Masuk</a>
-      <a href="#" class="inline-flex min-h-11 items-center rounded-btn bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Mulai gratis</a>
+      <a href="#" class="inline-flex min-h-11 items-center px-3 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400">Masuk</a>
+      <a href="#" class="inline-flex min-h-11 items-center rounded-lg bg-neutral-900 px-5 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400">Mulai gratis</a>
     </div>
 
     <!-- Menu mobile: nol JS, pakai <details> -->
     <details class="lg:hidden">
-      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-btn marker:content-none hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" aria-label="Buka menu">
+      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-lg marker:content-none hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400" aria-label="Buka menu">
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
       </summary>
-      <nav class="absolute inset-x-0 top-full border-b border-border bg-background px-6 py-4">
+      <nav class="absolute inset-x-0 top-full border-b border-neutral-200 bg-white px-6 py-4">
         <ul class="flex flex-col gap-1 text-sm">
-          <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Produk</a></li>
-          <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Harga</a></li>
-          <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Dokumentasi</a></li>
+          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-neutral-100">Produk</a></li>
+          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-neutral-100">Harga</a></li>
+          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-neutral-100">Dokumentasi</a></li>
         </ul>
-        <a href="#" class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-btn bg-primary px-5 text-sm font-medium text-primary-foreground">Mulai gratis</a>
+        <a href="#" class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-neutral-900 px-5 text-sm font-medium text-white">Mulai gratis</a>
       </nav>
     </details>
   </div>
 </header>
 
-<section id="hero" class="py-16 md:py-24 lg:py-32">
+<section id="hero" class="bg-white text-neutral-900 py-16 md:py-24 lg:py-32">
   <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 md:gap-12 lg:grid-cols-12 lg:gap-16 lg:px-8">
     <div class="lg:col-span-6">
-      <span class="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+      <span class="inline-flex items-center rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium uppercase tracking-widest text-neutral-500">
         Versi 2.0
       </span>
 
@@ -49,31 +46,31 @@
         Ubah gambar desain<br>jadi web statis
       </h1>
 
-      <p class="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
+      <p class="mt-6 max-w-lg text-base leading-relaxed text-neutral-500 md:text-lg">
         Tailwind v4, tanpa satu baris JavaScript perilaku. Satu halaman penuh
         plus file terpisah per section.
       </p>
 
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center rounded-btn bg-primary px-6 sm:w-auto text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-neutral-900 px-6 sm:w-auto text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400">
           Mulai sekarang
         </a>
-        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-btn border border-border px-6 sm:w-auto text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-neutral-200 px-6 sm:w-auto text-sm font-medium transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400">
           Lihat contoh
           <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
 
-      <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
+      <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-neutral-500">
         <span>Dipakai oleh</span>
-        <span class="font-medium text-foreground">Northwind</span>
-        <span class="font-medium text-foreground">Contoso</span>
-        <span class="font-medium text-foreground">Fabrikam</span>
+        <span class="font-medium text-neutral-900">Northwind</span>
+        <span class="font-medium text-neutral-900">Contoso</span>
+        <span class="font-medium text-neutral-900">Fabrikam</span>
       </div>
     </div>
 
     <div class="lg:col-span-6">
-      <div class="aspect-[4/3] w-full rounded-card border border-border bg-muted"></div>
+      <div class="aspect-[4/3] w-full rounded-xl border border-neutral-200 bg-neutral-100"></div>
     </div>
   </div>
 </section>

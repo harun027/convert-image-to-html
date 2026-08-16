@@ -65,10 +65,15 @@ menambah satu pun batasan baru**. Itu menurunkan kepatuhan, bukan menaikkan.
 
 ## Kerangka Blok 2 — pola `<!-- ISI:n -->`
 
-Isinya **potongan section saja**, sama persis dengan isi
-`sections/<nn>-<nama>/index.html`. Tanpa `<head>`, `<body>`, `<meta>`, `@theme` —
-semua itu milik `index.html` induk, dan menuliskannya ulang di prompt cuma memberi
-model murah kesempatan mengarang token warna yang berbeda dari section lain.
+Isinya **sama persis dengan isi `sections/<nn>-<nama>/index.html`**: markup section
+murni. Tanpa `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`,
+`<script>`, `<style>`.
+
+Warna dan radius muncul sebagai class di tag — `bg-white`, `text-neutral-500`,
+`rounded-2xl` — dan ditulis literal di kerangka. **Palet bawaan Tailwind saja**, bukan
+token proyek: prompt ini dipakai di AI luar yang tidak punya `@theme` project ini, jadi
+`bg-primary` akan keluar tanpa warna di sana. Model tidak pernah diminta menyimpulkan
+warna; kalau diminta, ia akan mengarang nilai yang beda dari section lain.
 
 Tulis semua pembungkus + class. Beri tanda hanya di titik yang boleh diisi.
 
@@ -97,7 +102,9 @@ Kalimat penutup itu wajib ada. Tanpa itu, model murah akan "memperbaiki" kerangk
 
 - [ ] Front-matter terisi (`section`, `order`, `file`, `image`, `includes` bila ada komponen melebur).
 - [ ] Tepat 5 blok, urut, tanpa blok tambahan.
-- [ ] Kerangka Blok 2 **hanya potongan** — mulai `<header`/`<section`, akhiri `</section>`. Nol `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<body>`, `<style>`, `@theme`.
+- [ ] Kerangka Blok 2 **markup section murni** — mulai tag akar, akhiri tag penutupnya. Nol `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`, `<script>`, `<style>`.
+- [ ] Tag akar di kerangka membawa `bg-*` + `text-*` sendiri; radius pakai skala bawaan (`rounded-lg`/`rounded-xl`/`rounded-2xl`/`rounded-full`).
+- [ ] Nol token proyek dan nol `var(--…)` di kerangka — palet bawaan Tailwind saja.
 - [ ] Nol kata sifat kualitas ("bagus", "rapi", "modern", "menarik").
 - [ ] Setiap teks yang tampil ada di tabel COPY — tidak ada yang disuruh dikarang.
 - [ ] Larangan tepat 3, tiap satu punya pasangan SALAH → BENAR.
