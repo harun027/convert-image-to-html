@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Template — Full Page</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style type="text/tailwindcss">
+    @theme {
+      --color-background:         oklch(1 0 0);
+      --color-foreground:         oklch(0.145 0 0);
+      --color-card:               oklch(1 0 0);
+      --color-muted:              oklch(0.97 0 0);
+      --color-muted-foreground:   oklch(0.556 0 0);
+      --color-primary:            oklch(0.205 0 0);
+      --color-primary-foreground: oklch(0.985 0 0);
+      --color-border:             oklch(0.922 0 0);
+      --color-ring:               oklch(0.708 0 0);
+      --radius-card: 0.75rem;
+      --radius-btn:  0.5rem;
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      @theme {
+        --color-background:         oklch(0.145 0 0);
+        --color-foreground:         oklch(0.985 0 0);
+        --color-card:               oklch(0.205 0 0);
+        --color-muted:              oklch(0.269 0 0);
+        --color-muted-foreground:   oklch(0.708 0 0);
+        --color-primary:            oklch(0.985 0 0);
+        --color-primary-foreground: oklch(0.205 0 0);
+        --color-border:             oklch(0.269 0 0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-background text-foreground font-sans antialiased">
+
+  <!-- ══ 01 · NAVBAR ══ -->
+  <header class="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
+      <a href="#" class="flex items-center gap-2 text-base font-semibold tracking-tight">
+        <span class="grid size-8 place-items-center rounded-btn bg-primary text-primary-foreground">◆</span>
+        Acme
+      </a>
+
+      <nav class="hidden lg:block">
+        <ul class="flex items-center gap-8 text-sm text-muted-foreground">
+          <li><a href="#hero" class="transition-colors hover:text-foreground">Produk</a></li>
+          <li><a href="#hero" class="transition-colors hover:text-foreground">Harga</a></li>
+          <li><a href="#hero" class="transition-colors hover:text-foreground">Dokumentasi</a></li>
+        </ul>
+      </nav>
+
+      <div class="hidden items-center gap-3 lg:flex">
+        <a href="#" class="inline-flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Masuk</a>
+        <a href="#" class="inline-flex min-h-11 items-center rounded-btn bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">Mulai gratis</a>
+      </div>
+
+      <!-- Menu mobile: nol JS, pakai <details> -->
+      <details class="lg:hidden">
+        <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-btn marker:content-none hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" aria-label="Buka menu">
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </summary>
+        <nav class="absolute inset-x-0 top-full border-b border-border bg-background px-6 py-4">
+          <ul class="flex flex-col gap-1 text-sm">
+            <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Produk</a></li>
+            <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Harga</a></li>
+            <li><a href="#hero" class="block rounded-btn px-3 py-3 hover:bg-muted">Dokumentasi</a></li>
+          </ul>
+          <a href="#" class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-btn bg-primary px-5 text-sm font-medium text-primary-foreground">Mulai gratis</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <!-- ══ 02 · HERO ══ -->
+  <section id="hero" class="py-16 md:py-24 lg:py-32">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 md:gap-12 lg:grid-cols-12 lg:gap-16 lg:px-8">
+      <div class="lg:col-span-6">
+        <span class="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Versi 2.0
+        </span>
+
+        <h1 class="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
+          Ubah gambar desain<br>jadi web statis
+        </h1>
+
+        <p class="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
+          Tailwind v4, tanpa satu baris JavaScript perilaku. Satu halaman penuh
+          plus file terpisah per section.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#" class="inline-flex min-h-11 w-full items-center justify-center rounded-btn bg-primary px-6 sm:w-auto text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            Mulai sekarang
+          </a>
+          <a href="#" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-btn border border-border px-6 sm:w-auto text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            Lihat contoh
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
+          <span>Dipakai oleh</span>
+          <span class="font-medium text-foreground">Northwind</span>
+          <span class="font-medium text-foreground">Contoso</span>
+          <span class="font-medium text-foreground">Fabrikam</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6">
+        <div class="aspect-[4/3] w-full rounded-card border border-border bg-muted"></div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

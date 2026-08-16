@@ -1,0 +1,20 @@
+# Hasil kerja — bukan bagian dari toolkit.
+# Repo ini isinya alat (skill + ruler + template), bukan output project.
+output/
+
+# Arsip & gambar referensi
+*.zip
+*.rar
+*.7z
+refs/
+
+# Sampah OS & editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Kalau nanti pakai build Tailwind lokal
+node_modules/
+styles.css
