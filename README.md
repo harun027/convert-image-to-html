@@ -15,7 +15,7 @@ dan prompt siap copy-paste per section.
 | `.claude/skills/.../references/setup.md` | Boilerplate `<head>`, token `:root` + `@theme inline`, komponen shadcn-style. |
 | `.claude/skills/.../references/no-js-patterns.md` | Resep interaksi CSS-only siap copy (accordion, tabs, modal, dst). |
 | `.claude/skills/.../references/responsive.md` | Kontrak responsif: 5 lebar uji, peta runtuh grid, skala tipografi, checklist 17 poin. |
-| `.claude/skills/.../references/prompt-template.md` | Cara menulis prompt yang tahan model murah (struktur 5 blok). |
+| `.claude/skills/.../references/prompt-template.md` | Cara menulis file prompt: brief prosa, ≤5.000 karakter, enam blok. |
 | `_template/` | Contoh output jadi. Jangan diedit — dipakai sebagai acuan bentuk. |
 | `output/<nama-project>/` | Hasil kerja kamu. Dibuat otomatis. |
 
@@ -99,8 +99,12 @@ Cukup ketik kalimat ini ke Claude Code:
 buatkan promtingnya
 ```
 
-Itu perintah resminya. Claude akan menulis satu file `.md` per section ke
-`prompts/`, format 5 blok, siap copy-paste ke AI lain.
+Itu perintah resminya. Claude akan menulis satu file `.md` per section ke `prompts/`,
+siap copy-paste utuh.
+
+Tiap file dibatasi **5.000 karakter** — seluruh isi file, termasuk spasi dan baris baru. Itu batas kotak input tool generator markup.
+Isinya brief prosa, bukan kerangka HTML: elemen, teks literalnya, dan nama class
+Tailwind-nya. Markup-nya ditulis oleh generator di seberang.
 
 | Yang kamu ketik | Yang dibuat |
 |---|---|
@@ -110,9 +114,9 @@ Itu perintah resminya. Claude akan menulis satu file `.md` per section ke
 
 ---
 
-## 4. Cara Copas Hasil Prompting-nya
+## 4. Cara Pakai Hasil Prompting-nya
 
-Ini bagian yang bikin kamu tidak tergantung Claude terus. Lima langkah.
+Ini bagian yang bikin kamu tidak tergantung Claude terus.
 
 ### Langkah 1 · Buka file prompt-nya
 
@@ -120,90 +124,64 @@ Ini bagian yang bikin kamu tidak tergantung Claude terus. Lima langkah.
 output/toko-baju/prompts/02-features.md
 ```
 
-Buka di VS Code, Notepad, atau langsung di GitHub — semua sama saja, isinya teks biasa.
+**Seluruh isi file itu adalah prompt.** Tidak ada bagian yang perlu dipilah — tidak ada
+front-matter, tidak ada judul, tidak ada penanda mulai/selesai. `Ctrl+A`, `Ctrl+C`.
 
-### Langkah 2 · Blok teks di antara dua penanda
+Ukurannya dijaga di bawah 5.000 karakter supaya muat utuh di kotak input tool generator
+markup — yang biasanya menghitung mundur `5000/5000` di pojok kanan atas.
 
-Di dalam file ada dua baris penanda:
+### Langkah 2 · Paste ke generator markup
 
-```
-## ▼ COPY MULAI          ← mulai blok dari BAWAH baris ini
-   … isi prompt …
-## ▲ COPY SELESAI        ← berhenti di ATAS baris ini
-```
+Tempel ke tool "generate markup from prompt" mana pun, atau ke Gemini / ChatGPT /
+DeepSeek / Claude. Lampirkan gambar section-nya kalau tool-nya mendukung.
 
-Copy semua yang ada di antaranya. **Jangan** ikut mengcopy front-matter
-(`---` … `---` di paling atas) dan judul `# Prompt — Section 02: …` —
-itu catatan untuk kamu, bukan untuk AI.
+Isi prompt-nya berupa brief: tiap elemen disebut lengkap dengan teks literalnya dan
+nama class Tailwind-nya, ditutup blok `CONSTRAINTS:` yang melarang doctype, CSS
+kustom, dan JavaScript. Tidak ada yang perlu ditebak model.
 
-> Cara cepat di VS Code: klik di awal baris setelah `▼ COPY MULAI`,
-> scroll ke `▲ COPY SELESAI`, lalu `Shift + Klik` di akhir baris sebelumnya → `Ctrl + C`.
+### Langkah 3 · Ambil kodenya
 
-### Langkah 3 · Paste ke AI mana pun + lampirkan gambar
-
-Buka Gemini / ChatGPT / DeepSeek / Claude — bebas, yang gratis pun cukup.
-
-1. Lampirkan gambar section itu (crop dari desain aslinya, misal `refs/02-features.png`).
-2. Paste prompt yang tadi di-copy.
-3. Kirim.
-
-Model gratis kelas Gemini Flash sudah cukup. Prompt-nya memang dirancang untuk itu.
-
-### Langkah 4 · Ambil kodenya
-
-Jawaban AI = satu blok kode berisi `<section>` sampai `</section>`, tidak lebih.
-Klik tombol copy di pojok blok kode itu.
+Jawabannya `<section>` sampai `</section>`, tidak lebih. Klik copy di pojok blok kode.
 
 Dua hal yang sering nyelip dan harus dibuang:
 
-- Penjelasan di luar blok kode ("Berikut adalah kode HTML-nya…") — ambil isi blok kode-nya saja.
-- Pembungkus halaman (`<!doctype html>`, `<html>`, `<head>`, `<body>`, `<style>`) — AI
-  melanggar Blok 1. Balas: `"markup section saja, mulai <section, tanpa head/body/style"`
+- Penjelasan di luar blok kode ("Berikut adalah kode HTML-nya…").
+- Pembungkus halaman (`<!doctype html>`, `<head>`, `<body>`, `<style>`) — itu melanggar
+  `CONSTRAINTS:`. Balas: `"section markup only, no doctype/head/body/style"`.
 
-### Langkah 5 · Timpa file section-nya
-
-Paste ke:
+### Langkah 4 · Timpa file section-nya
 
 ```
 output/toko-baju/sections/02-features/index.html
 ```
 
-File ini markup murni (tanpa `<script>` Tailwind), jadi double-click langsung
-menampilkan HTML polos. Preview-nya lewat preview editor / playground yang sudah
-menyediakan Tailwind — di sana tampilannya benar, hitam-putih-abu.
+File ini markup murni, jadi double-click cuma menampilkan HTML polos. Preview-nya lewat
+preview editor / playground yang sudah menyediakan Tailwind — di sana tampilannya benar,
+hitam-putih-abu.
 
-Untuk versi berwarna penuh, tempel ke `index.html` di posisi section itu **sambil
-menerjemahkan warnanya** lewat `NOTES.md` §Peta warna. Atau minta Claude:
+Untuk versi berwarna penuh, tempel ke `index.html` **sambil menerjemahkan warnanya**
+lewat `NOTES.md` §Peta warna. Atau minta Claude:
 `"gabungkan ulang semua section ke index.html"` — dia yang menerjemahkan.
 
 ### Kalau hasilnya meleset
 
-| Gejala | Sebabnya | Perbaikannya |
-|---|---|---|
-| Ada `<!doctype html>` / `<head>` / `<style>` di output | AI melanggar Blok 1 larangan 1 | Balas: `"markup section saja, tanpa head/body/style"` |
-| Section tanpa warna saat dibuka sendiri | Normal — token ada di `index.html` | Bukan bug. Preview lewat `index.html`. |
-| Warna section beda dari yang lain | AI mengarang class warna | Balas: `"pakai persis class di kerangka Blok 2"` |
-| Muncul `<script>` toggle menu | AI melanggar Blok 1 | Balas: `"nol JavaScript. Ulangi, pakai <details>"` |
-| Masih ada `<!-- ISI:3 -->` di output | AI berhenti di tengah | Balas: `"lanjutkan, ganti semua tanda ISI yang tersisa"` |
-| Layout ditambah-tambahi sendiri | AI mengubah kerangka | Balas: `"kembalikan persis ke kerangka Blok 2, jangan tambah elemen"` |
-| Berulang kali jelek | Prompt-nya masih menyisakan celah tebakan | Kirim output jeleknya ke Claude → titik yang bikin AI menebak akan ditambal jadi nilai literal |
+| Gejala | Perbaikannya |
+|---|---|
+| Ada `<!doctype html>` / `<head>` / `<style>` di output | Balas: `"section markup only, no doctype/head/body/style"` |
+| Muncul `<script>` untuk toggle | Balas: `"no JavaScript — use details/summary"` |
+| Section tanpa warna saat dibuka sendiri | Normal. Token warna ada di `index.html`. |
+| Teksnya dikarang, tidak sesuai gambar | Prompt-nya kurang teks literal. Kirim ke Claude untuk ditambal. |
+| Layout ditambah-tambahi | Prompt-nya kurang tegas jumlahnya. Minta Claude menulis "exactly N". |
+| Prompt ditolak tool-nya karena kepanjangan | Hitung ulang; harus ≤5.000. Minta Claude memadatkan. |
 
-### Kenapa model murah bisa sebagus model mahal?
+### Kenapa formatnya prosa, bukan kerangka HTML?
 
-Prompt-nya tidak menyuruh model berpikir sama sekali:
+Tool generator markup memang bekerja dari deskripsi. Mengirim kerangka HTML jadi dobel
+kerja: makan jatah karakter, dan hasilnya tetap di-generate ulang. Yang dikirim cukup
+keputusan desainnya — struktur, teks literal, nama class — dan itu muat jauh di bawah
+5.000 karakter bahkan untuk section besar.
 
-- Kerangka HTML sudah jadi — model cuma mengganti tanda `<!-- ISI:n -->`.
-- Semua teks tampilan ada di tabel COPY, tidak ada yang dikarang.
-- Class ditulis literal di kerangka, bukan disimpulkan.
-- Ditutup 6 poin cek yang bisa diverifikasi model sendiri.
-
-Nol tempat untuk menebak = nol tempat untuk salah.
-
-**Formatnya sengaja pendek.** Prompt panjang bukan prompt kuat — bagian tengah
-prompt panjang justru dilewati model murah. Yang bekerja cuma kerangka dan tabel
-COPY, jadi sisanya dipangkas: 5 blok, tidak lebih.
-
-Contoh jadi: [`_template/prompts/01-hero.md`](_template/prompts/01-hero.md)
+Contoh jadi: [`_template/prompts/01-hero.md`](_template/prompts/01-hero.md) (4.659 karakter)
 
 ---
 
@@ -220,8 +198,8 @@ Tidak perlu kamu sebut. Sudah tertanam di `CLAUDE.md`.
 | 5 | **Struktur output selalu sama.** Full + per-section + prompts. |
 | 5b | **Navbar/menu/tabs bukan section.** Melebur ke file section induknya. |
 | 5c | **File section = markup murni + palet bawaan.** Tanpa `<head>`/`<body>`/`<script>`/`<style>`, tanpa token proyek. Warna penuh hanya di `index.html`. |
-| 6 | **File prompt `.md`**, bukan `.txt`. |
-| 6b | **Prompt ditulis untuk model termurah.** Struktur 5 blok, pendek, nol kata sifat kualitas. |
+| 6 | **File prompt `.md`**, satu file per section. |
+| 6b | **File prompt = brief prosa, ≤5.000 karakter, nol tab.** Bukan kerangka HTML. |
 | 7 | **Spacing skala 4px, konsisten lintas section.** |
 | 7b | **Responsif diuji di 320 / 375 / 768 / 1024 / 1440px**, lulus checklist 17 poin. |
 | 8 | **Tidak menyentuh backend.** |

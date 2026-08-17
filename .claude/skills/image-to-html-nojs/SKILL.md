@@ -141,32 +141,40 @@ Untuk tiap section, urut dari `01`:
 
 2. Interaksi apa pun → pakai pola CSS-only dari `references/no-js-patterns.md`.
    Kalau tidak ada pola yang cocok, sederhanakan desainnya, **jangan tambah JS**.
-3. Tulis `prompts/<nn>-<nama>.md` — prompt siap copy-paste untuk regenerate section
-   itu dari gambar. **Prompt harus tahan model murah**: ditulis supaya Gemini Flash
-   kelas menghasilkan output identik dengan model mahal. Artinya nol penalaran
-   diperlukan — kerangka HTML sudah jadi, class ditulis literal, teks ada di tabel
-   COPY, ditutup checklist verifikasi. **Struktur 5 blok wajib** (KONTRAK ·
-   KERANGKA · COPY · CEK · KUNCI): aturan dan contoh lengkap di
-   `references/prompt-template.md`.
+3. Tulis `prompts/<nn>-<nama>.md` — **brief desain berbentuk prosa**, bukan kerangka
+   HTML. Isinya menjelaskan apa yang harus dibangun dengan nama class Tailwind yang
+   konkret; generator markup di seberang yang menulis HTML-nya.
 
-   Prompt pendek, bukan panjang. Kerangka HTML ~80% isi file; prosa sisanya.
-   Jangan hidupkan lagi blok whitelist class dan tabel responsif dari format
-   lama — keduanya sudah terwakili kerangka, dan menambah teks tanpa menambah
-   batasan justru menurunkan kepatuhan model murah.
+   Tiga aturan keras:
+
+   - **Maksimum 5.000 karakter per file** — seluruh isi file, termasuk spasi, tab, dan
+     baris baru. Itu batas kotak input tool generator; lewat satu karakter pun terpotong.
+   - **Nol tab, nol indentasi.** Tiap baris mulai di kolom 1.
+   - **Simpan LF, bukan CRLF.** CRLF menambah satu karakter per baris dan diam-diam
+     menendang file melewati batas.
+
+   Seluruh isi file adalah prompt — tanpa front-matter, tanpa judul markdown, tanpa
+   penanda copy, tanpa blok kode. User blok seluruh file, salin, tempel.
+
+   Enam blok, urutannya mengikat: kalimat pembuka · `LAYOUT —` · blok per bagian ·
+   blok data · `STYLE REQUIREMENTS:` · `CONSTRAINTS:`. Judul blok KAPITAL tanpa `#`.
+   Setiap butir menyebut elemen, teks literalnya dalam tanda kutip, lalu class-nya
+   dalam kurung. Aturan lengkap + contoh di `references/prompt-template.md`.
 
 **Trigger "buatkan promtingnya" (mode prompt saja).** Kalau user mengetik kalimat
 itu — dengan atau tanpa nama section — kerjakan hanya poin 3 di atas:
 
-- Sudah ada `sections/*/index.html` → turunkan kerangka Blok 2 langsung dari file
-  section itu (salin utuh, sisipkan tanda `<!-- ISI:n -->` di titik teks), lalu
-  tulis `prompts/<nn>-<nama>.md`. Jangan ubah file section-nya.
+- Sudah ada `sections/*/index.html` → prompt itu **transkrip file tersebut**, bukan
+  brief desain baru. Salin daftar class tiap elemen apa adanya ke dalam kalimat, lalu
+  **cek balik**: tiap nilai di prompt harus ada di file. Dilarang "memperbaiki" —
+  `p-6` tetap `p-6`, bukan `p-6 lg:p-8`. Jangan ubah file section-nya.
 - Belum ada section, hanya ada gambar → jalankan Step 1 + Step 2 dulu (butuh token),
   lalu tulis prompt-nya. Lewati penulisan HTML final.
 - User menyebut satu section (`buatkan promtingnya untuk 03-pricing`) → satu file itu
   saja. Tanpa sebutan → semua section di `sections/`.
 
-Selesai → sebutkan path file yang dibuat dan ingatkan penanda
-`▼ COPY MULAI` / `▲ COPY SELESAI` sebagai batas copy-paste.
+Selesai → sebutkan path file yang dibuat dan jumlah karakternya, dan ingatkan bahwa
+seluruh isi file itu yang di-paste (tidak ada bagian yang perlu dipilah).
 
 ### Step 4 — ASSEMBLE
 
@@ -221,7 +229,7 @@ output/<nama-project>/
 │   ├── 02-features/index.html    # <section> … </section>
 │   └── 03-pricing/index.html     # tabs harga menyatu di sini
 └── prompts/
-    ├── 01-hero.md                # prompt copy-paste untuk regenerate potongan ini
+    ├── 01-hero.md                # brief prosa, ≤5.000 karakter, seluruh isinya di-paste
     ├── 02-features.md
     └── 03-pricing.md
 ```
@@ -308,8 +316,17 @@ Peta runtuh grid, titik rawan pecah, dan checklist 17 poin: `references/responsi
 | `@theme` ditaruh di dalam `@media` | Tidak sah. Override dark mode lewat `:root`. |
 | Prompt menyuruh AI keluarkan `<!doctype html>` atau `<style>` | Output prompt = markup section murni. |
 | Bikin folder `01-navbar/` atau `xx-tabs/` | Bukan section. Lebur ke file section induknya. |
-| Prompt ditambah whitelist class / tabel responsif | Sudah terwakili kerangka. 5 blok saja. |
-| Prompt panjang dikira prompt kuat | Yang bekerja cuma kerangka + tabel COPY. Sisanya dilewati model murah. |
+| File prompt berisi kerangka HTML | Prompt itu brief prosa. Markup ditulis generator di seberang. |
+| File prompt > 5.000 karakter | Terpotong di kotak input tool. Padatkan butirnya, jangan buang nama class. |
+| File prompt disimpan CRLF | +1 karakter per baris. Simpan LF. |
+| Prompt menulis nilai spacing sebagai rentang ("p-6 to p-8") | Model memilih beda-beda tiap kartu. Satu nilai per slot. |
+| Kedua segmen tab/toggle menyala bersamaan | Prompt memakai placeholder (`peer-checked/X:`). Tulis per label, literal, plus kata `ONLY`. |
+| Nama kelas di prompt memakai placeholder | Placeholder = penalaran = bug. Tulis tiap varian utuh per elemen. |
+| Prompt mendeskripsikan bentuk ikon | Sebut nama Lucide-nya, dan `d="…"` kalau file section memakai path spesifik. |
+| Nilai di prompt tidak ada di file section | Itu improvisasi. Prompt = transkrip file, cek balik satu per satu. |
+| Prompt menambah `lg:` yang tidak ada di file | Hasilnya melenceng dari section. Salin apa adanya. |
+| File prompt punya front-matter / judul / penanda copy | Seluruh isi file harus bisa di-paste apa adanya. |
+| Prompt pakai tab atau baris ber-indentasi | Nol tab. Tiap baris mulai di kolom 1. |
 | Warna dikira-kira | Sampel dari gambar. Kalau ragu, tulis di NOTES.md. |
 | Section terakhir/footer dilewat | Semua section di gambar dikerjakan. |
 | Hapus focus ring biar "bersih" | Ganti stylenya, jangan dihapus. |
@@ -320,4 +337,4 @@ Peta runtuh grid, titik rawan pecah, dan checklist 17 poin: `references/responsi
 - `references/setup.md` — boilerplate `<head>`, token `:root` + `@theme inline` (pola shadcn v4)
 - `references/no-js-patterns.md` — resep interaksi CSS-only (copy-paste siap pakai)
 - `references/responsive.md` — kontrak responsif: 5 lebar uji, peta runtuh grid, skala tipografi, checklist 17 poin
-- `references/prompt-template.md` — cara menulis prompt yang tahan model murah (struktur 5 blok)
+- `references/prompt-template.md` — cara menulis file prompt: brief prosa, ≤5.000 karakter, enam blok
