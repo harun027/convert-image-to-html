@@ -218,10 +218,20 @@ Empat hal yang mengikat:
 Alias seperti `FOCUS RING` tetap boleh, karena dia menggantikan rangkaian utuh yang
 sama di mana-mana — bukan menyuruh model memilih nilai per elemen.
 
-### 3. Ikon — sebut namanya di Lucide, jangan gambarkan path-nya
+### 3. Ikon — sebut nama Lucide-nya, dan **pertahankan data SVG-nya**
 
-shadcn/ui memakai Lucide. Sebut nama ikonnya, jangan mendeskripsikan bentuk atau
-menuliskan `d="…"` — model sudah hafal set-nya, dan menyebut nama jauh lebih pendek.
+shadcn/ui memakai Lucide. Sebut nama ikonnya, jangan mendeskripsikan bentuknya
+("ikon centang kecil", "panah ke kanan") — model sudah hafal set-nya.
+
+**Tapi nama saja tidak cukup.** Kalau file section memuat `d="…"`, `viewBox`, atau
+atribut stroke tertentu, semuanya **wajib ikut ditulis di prompt**. Lucide punya
+banyak varian dan versi; menyebut nama saja membuat generator memilih path-nya
+sendiri, dan bentuk ikonnya meleset dari file section. Data SVG adalah bagian dari
+transkrip — memangkasnya untuk menghemat karakter itu membuang desain, bukan
+menghemat.
+
+Sama berlaku untuk SVG yang bukan ikon: logo, wordmark, ornamen. Jangan pernah
+menghapusnya dari prompt hanya karena panjang.
 
 ```
 - the Lucide "check" icon, size-4, shrink-0
@@ -273,7 +283,7 @@ Section besar pun muat begitu markup-nya tidak ikut ditulis.
 - [ ] Nol kata sifat kualitas: "modern", "rapi", "menarik", "profesional".
 - [ ] Ada blok `SPACING` berisi satu nilai per slot — nol rentang seperti "p-6 to p-8".
 - [ ] Kontrol tersegmen: tiap segmen menyebut varian miliknya sendiri secara literal, ada kata `ONLY`, ada larangan silang. Nol placeholder (`X`, `n`) di nama kelas mana pun.
-- [ ] Ikon disebut dengan nama Lucide, bukan deskripsi bentuk atau `d="…"`.
+- [ ] Ikon disebut dengan nama Lucide, **dan** `d="…"`/`viewBox`/atribut stroke-nya ikut ditulis persis seperti di file section. Nol SVG yang dibuang.
 - [ ] `CONSTRAINTS:` ada di paling akhir, lima baris, baris ketiga menyebut pola CSS-only-nya.
 - [ ] Tidak ada file prompt untuk navbar/tabs/dropdown — melebur ke prompt section induknya.
 

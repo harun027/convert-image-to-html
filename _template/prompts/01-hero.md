@@ -16,7 +16,7 @@ HEADER:
 - Logo link (flex, items-center, gap-2, text-base font-semibold tracking-tight): a square mark (grid, size-8, place-items-center, rounded-lg, bg-neutral-900, text-white) then "Acme"
 - Desktop nav (hidden, lg:block): a ul (flex, items-center, gap-8, text-sm, text-neutral-500) with three links "Produk", "Harga", "Dokumentasi", each transition-colors hover:text-neutral-900
 - Desktop actions (hidden, lg:flex, items-center, gap-3): ghost link "Masuk" (inline-flex, min-h-11, items-center, px-3, text-sm font-medium, text-neutral-500, transition-colors, hover:text-neutral-900, FOCUS RING) and solid "Mulai gratis" (inline-flex, min-h-11, items-center, rounded-lg, bg-neutral-900, px-5, text-sm font-medium, text-white, transition-opacity, hover:opacity-90, FOCUS RING)
-- Mobile menu, CSS-only: a details (lg:hidden). Summary is the trigger (grid, size-11, cursor-pointer, list-none, place-items-center, rounded-lg, marker:content-none, hover:bg-neutral-100, FOCUS RING) holding the Lucide "menu" icon at size-6, aria-label "Buka menu". The panel is a nav (absolute, inset-x-0, top-full, border-b, border-neutral-200, bg-white, px-6, py-4) with a ul (flex, flex-col, gap-1, text-sm) repeating the three links (block, rounded-lg, px-3, py-3, hover:bg-neutral-100), then a "Mulai gratis" button (mt-4, inline-flex, min-h-11, w-full, items-center, justify-center, rounded-lg, bg-neutral-900, px-5, text-sm font-medium, text-white)
+- Mobile menu, CSS-only: a details (lg:hidden). Summary is the trigger (grid, size-11, cursor-pointer, list-none, place-items-center, rounded-lg, marker:content-none, hover:bg-neutral-100, FOCUS RING) holding the Lucide "menu" icon, aria-label "Buka menu". The panel is a nav (absolute, inset-x-0, top-full, border-b, border-neutral-200, bg-white, px-6, py-4) with a ul (flex, flex-col, gap-1, text-sm) repeating the three links (block, rounded-lg, px-3, py-3, hover:bg-neutral-100), then a "Mulai gratis" button (mt-4, inline-flex, min-h-11, w-full, items-center, justify-center, rounded-lg, bg-neutral-900, px-5, text-sm font-medium, text-white)
 
 HERO SECTION:
 - Root section carries its own colors: bg-white, text-neutral-900
@@ -25,14 +25,14 @@ HERO SECTION:
 - Pill "Versi 2.0": inline-flex, items-center, rounded-full, border, border-neutral-200, px-3, py-1, text-xs font-medium, uppercase, tracking-widest, text-neutral-500
 - H1 split over two lines with a br, "Ubah gambar desain" / "jadi web statis": text-4xl, md:text-5xl, lg:text-6xl, font-semibold, tracking-tight, leading-[1.1]
 - Paragraph "Tailwind v4, tanpa satu baris JavaScript perilaku. Satu halaman penuh plus file terpisah per section.": max-w-lg, text-base, md:text-lg, leading-relaxed, text-neutral-500
-- Button row (flex, flex-wrap, items-center), two CTAs sharing (w-full, sm:w-auto, inline-flex, min-h-11, items-center, justify-center, rounded-lg, px-6, text-sm font-medium, FOCUS RING): primary "Mulai sekarang" (bg-neutral-900, text-white, transition-opacity, hover:opacity-90), secondary "Lihat contoh" (gap-2, border, border-neutral-200, transition-colors, hover:bg-neutral-100) with the Lucide "arrow-right" icon at size-4 after its label
+- Button row (flex, flex-wrap, items-center), two CTAs sharing (w-full, sm:w-auto, inline-flex, min-h-11, items-center, justify-center, rounded-lg, px-6, text-sm font-medium, FOCUS RING): primary "Mulai sekarang" (bg-neutral-900, text-white, transition-opacity, hover:opacity-90), secondary "Lihat contoh" (gap-2, border, border-neutral-200, transition-colors, hover:bg-neutral-100) with the Lucide "arrow-right" icon after its label
 - Logo row (flex, flex-wrap, items-center, text-sm, text-neutral-500): lead-in "Dipakai oleh" then "Northwind", "Contoso", "Fabrikam", each font-medium text-neutral-900
 - Right column spans lg:col-span-6 with one empty div: aspect-[4/3], w-full, rounded-xl, border, border-neutral-200, bg-neutral-100
 
 STYLE REQUIREMENTS:
 - Palette: white, neutral-100/200/500/900 only. No custom tokens or CSS variables
 - Radius: rounded-lg buttons and menu items, rounded-xl placeholder, rounded-full pill
-- Icons inline SVG from Lucide: viewBox "0 0 24 24", fill none, stroke currentColor, stroke-width 2, linecap and linejoin round, aria-hidden
+- Icons are inline SVG, viewBox "0 0 24 24", fill none, stroke currentColor, stroke-width 2, stroke-linecap round, aria-hidden. The Lucide menu icon is size-6 with d="M4 6h16M4 12h16M4 18h16". The Lucide arrow-right icon is size-4, adds stroke-linejoin round, and has d="M5 12h14M12 5l7 7-7 7"
 - Every interactive element is at least 44px tall (min-h-11 or size-11)
 - Do not add md: or lg: variants not listed, never swap a value for a similar one
 - Both CTAs share identical padding and height so they line up side by side
