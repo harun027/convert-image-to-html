@@ -1,9 +1,12 @@
 # Setup — Tailwind v4 tanpa build, token shadcn-style
 
-## Boilerplate `<head>`
+## Boilerplate `<head>` — hanya untuk `index.html`
 
-Blok ini **identik** di `index.html` dan di setiap `sections/*/index.html`.
-Ganti nilai `@theme` dengan hasil ukur dari gambar.
+Blok ini ditulis **satu kali saja**, di `index.html`. File di `sections/*/index.html`
+adalah markup section murni — tanpa `<head>`, `<body>`, `<script>`, maupun `<style>`
+(lihat §Bentuk file section di bawah).
+
+Ganti nilai di `:root` dengan hasil ukur dari gambar.
 
 ```html
 <!doctype html>
@@ -21,52 +24,138 @@ Ganti nilai `@theme` dengan hasil ukur dari gambar.
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style type="text/tailwindcss">
-    @theme {
-      /* --- warna: hasil sampel dari gambar --- */
-      --color-background:        oklch(1 0 0);
-      --color-foreground:        oklch(0.145 0 0);
-      --color-card:              oklch(1 0 0);
-      --color-card-foreground:   oklch(0.145 0 0);
-      --color-muted:             oklch(0.97 0 0);
-      --color-muted-foreground:  oklch(0.556 0 0);
-      --color-primary:           oklch(0.205 0 0);
-      --color-primary-foreground:oklch(0.985 0 0);
-      --color-accent:            oklch(0.97 0 0);
-      --color-border:            oklch(0.922 0 0);
-      --color-ring:              oklch(0.708 0 0);
-
-      /* --- bentuk --- */
-      --radius-card: 0.75rem;
-      --radius-btn:  0.5rem;
-
-      /* --- tipografi --- */
-      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    /* 1 · Nilai mentah menempel di :root — itu elemen <html>. Hasil sampel dari gambar. */
+    :root {
+      --background:         oklch(1 0 0);
+      --foreground:         oklch(0.145 0 0);
+      --card:               oklch(1 0 0);
+      --card-foreground:    oklch(0.145 0 0);
+      --muted:              oklch(0.97 0 0);
+      --muted-foreground:   oklch(0.556 0 0);
+      --primary:            oklch(0.205 0 0);
+      --primary-foreground: oklch(0.985 0 0);
+      --accent:             oklch(0.97 0 0);
+      --accent-foreground:  oklch(0.145 0 0);
+      --border:             oklch(0.922 0 0);
+      --input:              oklch(0.922 0 0);
+      --ring:               oklch(0.708 0 0);
     }
 
-    /* Dark mode otomatis mengikuti OS. Tanpa JS tidak ada tombol toggle;
-       kalau butuh toggle manual, lihat no-js-patterns.md §Dark mode toggle. */
+    /* 2 · Dark mode ikut OS. Nol JS, jadi bukan class .dark — cukup timpa :root.
+           Kalau user benar-benar minta tombol, lihat no-js-patterns.md §Dark mode toggle. */
     @media (prefers-color-scheme: dark) {
-      @theme {
-        --color-background:       oklch(0.145 0 0);
-        --color-foreground:       oklch(0.985 0 0);
-        --color-card:             oklch(0.205 0 0);
-        --color-muted:            oklch(0.269 0 0);
-        --color-muted-foreground: oklch(0.708 0 0);
-        --color-primary:          oklch(0.985 0 0);
-        --color-primary-foreground: oklch(0.205 0 0);
-        --color-border:           oklch(0.269 0 0);
+      :root {
+        --background:         oklch(0.145 0 0);
+        --foreground:         oklch(0.985 0 0);
+        --card:               oklch(0.205 0 0);
+        --card-foreground:    oklch(0.985 0 0);
+        --muted:              oklch(0.269 0 0);
+        --muted-foreground:   oklch(0.708 0 0);
+        --primary:            oklch(0.985 0 0);
+        --primary-foreground: oklch(0.205 0 0);
+        --accent:             oklch(0.269 0 0);
+        --border:             oklch(0.269 0 0);
       }
+    }
+
+    /* 3 · Petakan ke utility. */
+    @theme inline {
+      --color-background:         var(--background);
+      --color-foreground:         var(--foreground);
+      --color-card:               var(--card);
+      --color-card-foreground:    var(--card-foreground);
+      --color-muted:              var(--muted);
+      --color-muted-foreground:   var(--muted-foreground);
+      --color-primary:            var(--primary);
+      --color-primary-foreground: var(--primary-foreground);
+      --color-accent:             var(--accent);
+      --color-accent-foreground:  var(--accent-foreground);
+      --color-border:             var(--border);
+      --color-input:              var(--input);
+      --color-ring:               var(--ring);
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
     }
   </style>
 </head>
 <body class="bg-background text-foreground font-sans antialiased">
-  <!-- section di sini -->
+
+  <!-- isi sections/01-hero/index.html ditempel di sini, apa adanya -->
+  <!-- isi sections/02-features/index.html ditempel di sini, apa adanya -->
+
 </body>
 </html>
 ```
 
-Token `@theme` otomatis jadi utility: `--color-primary` → `bg-primary`, `text-primary`,
-`border-primary`. `--radius-card` → `rounded-card`.
+### Kenapa tiga blok, bukan satu `@theme`
+
+Ini pola shadcn di Tailwind v4, dan bukan sekadar gaya:
+
+| Blok | Perannya |
+|---|---|
+| `:root { --primary: … }` | Nilai mentah, menempel di elemen `<html>`. Ini yang di-override saat dark mode. |
+| `@media … { :root { … } }` | Timpa nilai mentahnya saja. `@theme` **tidak sah** di dalam `@media` — hanya di level teratas. |
+| `@theme inline { --color-primary: var(--primary) }` | Bikin utility. Kata `inline` bikin `bg-primary` jadi `background-color: var(--primary)`. |
+
+Tanpa `inline`, Tailwind membekukan nilai `--primary` saat kompilasi, jadi `bg-primary`
+keluar `oklch(0.205 0 0)` mati — override `:root` di blok 2 tidak ke-baca dan dark mode
+diam-diam tidak jalan. Itu alasan `inline` wajib, bukan opsional.
+
+`@theme inline` hanya untuk **warna dan font**. Radius tidak ditokenkan — pakai skala
+bawaan Tailwind langsung di markup (`rounded-lg`, `rounded-xl`, `rounded-2xl`,
+`rounded-full`), supaya nilainya kelihatan saat membaca kode.
+
+Hasilnya utility biasa di markup: `--color-primary` → `bg-primary` / `text-primary` /
+`border-primary`.
+
+## Bentuk file section
+
+`sections/<nn>-<nama>/index.html` = **markup section murni**. Baris pertama langsung
+tag akarnya, baris terakhir tag penutupnya.
+
+```html
+<section class="bg-white text-neutral-900 py-16 md:py-24 lg:py-32">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="rounded-2xl border border-neutral-200 bg-white p-6 lg:p-8">…</div>
+  </div>
+</section>
+```
+
+Dilarang ada di file ini: `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<title>`,
+`<body>`, `<script>`, `<style>`, `@theme`, dan komentar penanda apa pun.
+
+**Warna pakai palet bawaan Tailwind, bukan token proyek.** Token (`bg-primary`,
+`bg-background`, `bg-brand-*`) hidup di `<head>` `index.html`; kalau dipakai di file
+section, section itu tampil tanpa warna di mana pun token-nya tidak dimuat. Palet
+bawaan selalu ada, jadi file section tetap tampil hitam-putih-abu yang menyerupai
+`index.html` di editor mana pun.
+
+| Peran | Di file section (bawaan) | Di `index.html` (token) |
+|---|---|---|
+| Latar halaman / kartu | `bg-white` | `bg-background` / `bg-card` |
+| Teks utama | `text-neutral-900` | `text-foreground` |
+| Teks sekunder | `text-neutral-500` | `text-muted-foreground` |
+| Garis | `border-neutral-200` | `border-border` |
+| Permukaan redup | `bg-neutral-100` | `bg-muted` |
+| Tombol utama | `bg-neutral-900 text-white` | `bg-primary text-primary-foreground` |
+| Aksen berwarna | padanan bawaan terdekat (`bg-blue-500`) | token brand-nya |
+| Ring fokus | `outline-neutral-400` | `outline-ring` |
+
+Peta ini **wajib ditulis di `NOTES.md`** tiap project (§Peta warna), karena dia yang
+dipakai saat menempel section ke `index.html`. Nol `var(--…)` di file section.
+
+**Tag akar membawa warnanya sendiri.** `bg-white text-neutral-900` di tag `<section>` —
+atau `bg-neutral-100` / `bg-neutral-950` kalau gambar memang menunjukkan section itu
+beda. Warna tidak boleh menggantung ke `<body>`.
+
+**Radius pakai skala bawaan Tailwind:** `rounded-lg` (tombol/input), `rounded-xl`
+atau `rounded-2xl` (kartu), `rounded-full` (badge/pil). Jangan bikin token radius
+kustom seperti `--radius-card` → `rounded-card`; itu satu lapis tak perlu antara
+gambar dan kode, dan bikin nilai radius tidak kelihatan saat membaca markup.
+
+Konsekuensi: file section tidak memuat Tailwind sendiri, jadi double-click murni
+menampilkan HTML tanpa gaya. Tapi begitu dirender di lingkungan mana pun yang
+menyediakan Tailwind (preview editor, playground, halaman lain), tampilannya langsung
+benar — karena semua class-nya bawaan, tidak ada yang perlu didefinisikan.
 
 ## Kalau user minta tanpa CDN sama sekali
 
@@ -88,23 +177,23 @@ adalah token + kelas visualnya. Tulis tangan:
 ```html
 <!-- Button: primary / secondary / ghost -->
 <a href="#"
-   class="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn
+   class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg
           bg-primary px-5 text-sm font-medium text-primary-foreground
-          transition-colors hover:opacity-90
-          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+          transition-colors hover:bg-primary/90
+          focus-visible:ring-3 focus-visible:ring-ring/50">
   Get started
 </a>
 
 <button type="button"
-   class="inline-flex min-h-11 items-center justify-center gap-2 rounded-btn border
-          border-border bg-background px-5 text-sm font-medium
-          transition-colors hover:bg-muted
-          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+   class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border
+          border-input bg-background px-5 text-sm font-medium
+          transition-colors hover:bg-accent hover:text-accent-foreground
+          focus-visible:ring-3 focus-visible:ring-ring/50">
   Learn more
 </button>
 
 <!-- Card -->
-<div class="rounded-card border border-border bg-card p-6 lg:p-8">
+<div class="rounded-2xl border border-border bg-card p-6 lg:p-8">
   <h3 class="text-lg font-semibold tracking-tight">Judul</h3>
   <p class="mt-2 text-sm text-muted-foreground">Deskripsi pendek.</p>
 </div>
@@ -113,9 +202,9 @@ adalah token + kelas visualnya. Tulis tangan:
 <label class="block">
   <span class="text-sm font-medium">Email</span>
   <input type="email" required placeholder="nama@email.com"
-         class="mt-2 block w-full min-h-11 rounded-btn border border-border bg-background
+         class="mt-2 block w-full min-h-11 rounded-lg border border-input bg-background
                 px-3 text-sm placeholder:text-muted-foreground
-                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                focus-visible:ring-3 focus-visible:ring-ring/50
                 invalid:not-placeholder-shown:border-red-500">
 </label>
 
