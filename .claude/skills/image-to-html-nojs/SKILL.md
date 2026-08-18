@@ -178,6 +178,11 @@ seluruh isi file itu yang di-paste (tidak ada bagian yang perlu dipilah).
 
 ### Step 4 — ASSEMBLE
 
+**Sebelum menulis `index.html`**, invoke skill `ui-ux-pro-max`, `emil-design-eng`,
+`design-taste-frontend-v1`, dan `ponytail:ponytail` — dipakai bersamaan untuk
+memandu keputusan desain (palet, tipografi, hierarki) sekaligus menjaga markup
+tetap minimal, bukan sebagai pengganti Step 1–3.
+
 `index.html` = satu `<head>` + satu blok token (boilerplate di `references/setup.md`),
 lalu markup tiap section ditempel berurutan ke dalam `<body>` **apa adanya**.
 
