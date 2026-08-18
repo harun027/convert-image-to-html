@@ -48,17 +48,21 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
    **BUKAN** section — mereka melebur ke dalam file section tempat mereka berada.
    Navbar masuk ke `01-hero/index.html`, tabs harga masuk ke `0n-pricing/index.html`.
    Jangan pernah membuat `sections/01-navbar/`, `sections/xx-tabs/`, atau sejenisnya.
-6. **Format file prompt = `.md`**, bukan `.txt`. Alasannya: code fence menjaga
-   snippet HTML tetap utuh, ada front-matter untuk metadata section, dan langsung
-   ter-render rapi di editor/GitHub.
-6b. **Prompt ditulis untuk model termurah.** Target: Gemini Flash kelas menghasilkan
-   output identik dengan model mahal. Nol penalaran boleh dibebankan ke model —
-   kerangka HTML sudah jadi dengan tanda `<!-- ISI:n -->`, class ditulis literal,
-   teks ada di tabel COPY, ditutup checklist verifikasi.
-   **Struktur 5 blok wajib** — KONTRAK · KERANGKA · COPY · CEK · KUNCI
-   (`references/prompt-template.md`). Pendek, bukan panjang: kerangka ~80% isi file.
-   Nol kata sifat kualitas: "modern", "rapi", "menarik", "profesional" dilarang
-   muncul di file prompt.
+6. **Satu section = satu file prompt `.md`.** Namanya `prompts/<nn>-<nama>.md`,
+   sama persis dengan nama folder section-nya.
+6b. **File prompt = transkrip prosa dari file section, bukan kerangka HTML dan bukan
+   brief desain baru.** Tiap class di prompt wajib ada di `sections/<nn>/index.html`,
+   dan sebaliknya — cek balik satu per satu. Dilarang "memperbaiki" nilai: `p-6` tetap
+   `p-6`, bukan `p-6 lg:p-8`. Teks literal ditulis dalam tanda kutip.
+   **Maksimum 5.000 karakter per file** — seluruh isi file termasuk spasi, tab, dan
+   baris baru (batas kotak input tool generator), dihitung bukan dikira, **nol tab / nol indentasi**, dan **disimpan LF** (CRLF menambah satu
+   karakter per baris). Wajib memuat blok `SPACING` dengan satu nilai per slot —
+   nol rentang seperti "p-6 to p-8". Ikon disebut dengan nama Lucide (`check`, `x`,
+   `menu`, `arrow-right`), bukan dideskripsikan bentuknya. Seluruh isi file adalah prompt —
+   dilarang ada front-matter, judul markdown, penanda copy, atau blok kode.
+   Enam blok, urut: kalimat pembuka · `LAYOUT —` · blok per bagian · blok data ·
+   `STYLE REQUIREMENTS:` · `CONSTRAINTS:` (`references/prompt-template.md`).
+   Nol kata sifat kualitas: "modern", "rapi", "menarik", "profesional".
 6c. **Trigger "buatkan promtingnya".** Kalimat ini dari user = perintah menulis file
    `prompts/<nn>-<nama>.md`. Tanpa nama section → semua section. Dengan nama section
    → satu file itu saja. Detail di SKILL.md Step 3.
@@ -89,7 +93,14 @@ Berlaku otomatis, walau user tidak menyebut skill-nya.
 - Tempel section ke `index.html` tanpa menerjemahkan warna → halaman penuh jadi abu-abu.
 - Bikin token radius kustom (`rounded-card`, `--radius-btn`) → pakai skala bawaan Tailwind.
 - Prompt berisi "buat yang rapi dan menarik" → model murah mengabaikannya. Ganti jadi angka/class.
-- Prompt menyuruh model mengarang copy atau menyimpulkan class → tulis literal di tabel COPY / kerangka.
+- Prompt menyuruh model mengarang copy atau menyimpulkan warna → tulis teks dalam tanda kutip, warna sebagai nama class.
+- File prompt berisi kerangka HTML atau blok kode → itu brief prosa. Markup ditulis generator di seberang.
+- File prompt > 5.000 karakter → padatkan butirnya, jangan buang nama class atau teks literal.
+- Nilai spacing ditulis sebagai rentang ("p-6 to p-8") → model memilih beda tiap kartu. Satu nilai per slot.
+- Nama kelas di prompt pakai placeholder (`peer-checked/X:`) → model pasang semua varian di semua elemen; tab jadi menyala semua. Tulis literal per elemen.
+- Ikon dideskripsikan bentuknya → sebut nama Lucide-nya, plus `d="…"` kalau file section memakainya.
+- Nilai di file prompt tidak ada di file section → itu improvisasi. Prompt = transkrip, bukan desain baru.
+- File prompt punya front-matter/judul/penanda copy, atau baris ber-indentasi → seluruh isinya harus bisa di-paste apa adanya.
 - Hanya cek tampilan di 1440px → uji lima lebar, mulai dari 320px.
 - Paragraf tanpa `max-w-*` → melar tak terbaca di layar lebar.
 - Nav desktop muncul di `md:` → tahan sampai `lg:`, 768px terlalu sempit.

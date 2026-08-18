@@ -1,151 +1,45 @@
----
-section: 01-hero
-order: 1
-file: sections/01-hero/index.html
-image: refs/01-hero.png
-includes: [navbar, menu-mobile]
----
+Design a sticky site header plus a Hero section as plain HTML with Tailwind utility classes only. Every class below is exact: use it verbatim, never substitute, never add one not listed.
 
-# Prompt — Section 01: Hero (navbar menyatu)
+FOCUS RING = focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400
 
-Lampirkan `refs/01-hero.png`, lalu copy seluruh isi di antara dua penanda di bawah
-ke AI mana pun. Ditulis untuk model termurah — nol penalaran diperlukan.
+LAYOUT — Sticky header with logo, desktop nav and mobile menu, then a two-column hero: copy left, placeholder right.
 
-Output prompt ini berupa **potongan HTML murni** — hanya `<header>` + `<section>`.
-Tanpa `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<body>`, `<script>`, `<style>`.
+SPACING (exactly these, no ranges):
+- Header row px-6, py-4, lg:px-8. Section py-16, md:py-24, lg:py-32
+- Container mx-auto, max-w-7xl, px-6, lg:px-8. Hero gap-10, md:gap-12, lg:gap-16
+- Left column: badge→h1 mt-6, h1→paragraph mt-6, paragraph→buttons mt-8, buttons→logos mt-12
+- Button row gap-3. Logo row gap-x-8, gap-y-4
 
-## ▼ COPY MULAI
+HEADER:
+- header: sticky, top-0, z-40, border-b, border-neutral-200, bg-white/80, backdrop-blur, text-neutral-900
+- Inner row: mx-auto, max-w-7xl, flex, items-center, justify-between, gap-6
+- Logo link (flex, items-center, gap-2, text-base font-semibold tracking-tight): a square mark (grid, size-8, place-items-center, rounded-lg, bg-neutral-900, text-white) then "Acme"
+- Desktop nav (hidden, lg:block): a ul (flex, items-center, gap-8, text-sm, text-neutral-500) with three links "Produk", "Harga", "Dokumentasi", each transition-colors hover:text-neutral-900
+- Desktop actions (hidden, lg:flex, items-center, gap-3): ghost link "Masuk" (inline-flex, min-h-11, items-center, px-3, text-sm font-medium, text-neutral-500, transition-colors, hover:text-neutral-900, FOCUS RING) and solid "Mulai gratis" (inline-flex, min-h-11, items-center, rounded-lg, bg-neutral-900, px-5, text-sm font-medium, text-white, transition-opacity, hover:opacity-90, FOCUS RING)
+- Mobile menu, CSS-only: a details (lg:hidden). Summary is the trigger (grid, size-11, cursor-pointer, list-none, place-items-center, rounded-lg, marker:content-none, hover:bg-neutral-100, FOCUS RING) holding the Lucide "menu" icon, aria-label "Buka menu". The panel is a nav (absolute, inset-x-0, top-full, border-b, border-neutral-200, bg-white, px-6, py-4) with a ul (flex, flex-col, gap-1, text-sm) repeating the three links (block, rounded-lg, px-3, py-3, hover:bg-neutral-100), then a "Mulai gratis" button (mt-4, inline-flex, min-h-11, w-full, items-center, justify-center, rounded-lg, bg-neutral-900, px-5, text-sm font-medium, text-white)
 
-### BLOK 1 — KONTRAK
+HERO SECTION:
+- Root section carries its own colors: bg-white, text-neutral-900
+- Container also gets grid, items-center, lg:grid-cols-12
+- Left column spans lg:col-span-6, holding in order:
+- Pill "Versi 2.0": inline-flex, items-center, rounded-full, border, border-neutral-200, px-3, py-1, text-xs font-medium, uppercase, tracking-widest, text-neutral-500
+- H1 split over two lines with a br, "Ubah gambar desain" / "jadi web statis": text-4xl, md:text-5xl, lg:text-6xl, font-semibold, tracking-tight, leading-[1.1]
+- Paragraph "Tailwind v4, tanpa satu baris JavaScript perilaku. Satu halaman penuh plus file terpisah per section.": max-w-lg, text-base, md:text-lg, leading-relaxed, text-neutral-500
+- Button row (flex, flex-wrap, items-center), two CTAs sharing (w-full, sm:w-auto, inline-flex, min-h-11, items-center, justify-center, rounded-lg, px-6, text-sm font-medium, FOCUS RING): primary "Mulai sekarang" (bg-neutral-900, text-white, transition-opacity, hover:opacity-90), secondary "Lihat contoh" (gap-2, border, border-neutral-200, transition-colors, hover:bg-neutral-100) with the Lucide "arrow-right" icon after its label
+- Logo row (flex, flex-wrap, items-center, text-sm, text-neutral-500): lead-in "Dipakai oleh" then "Northwind", "Contoso", "Fabrikam", each font-medium text-neutral-900
+- Right column spans lg:col-span-6 with one empty div: aspect-[4/3], w-full, rounded-xl, border, border-neutral-200, bg-neutral-100
 
-Kamu generator potongan HTML. Tugasmu mengisi kerangka di Blok 2.
+STYLE REQUIREMENTS:
+- Palette: white, neutral-100/200/500/900 only. No custom tokens or CSS variables
+- Radius: rounded-lg buttons and menu items, rounded-xl placeholder, rounded-full pill
+- Icons are inline SVG, viewBox "0 0 24 24", fill none, stroke currentColor, stroke-width 2, stroke-linecap round, aria-hidden. The Lucide menu icon is size-6 with d="M4 6h16M4 12h16M4 18h16". The Lucide arrow-right icon is size-4, adds stroke-linejoin round, and has d="M5 12h14M12 5l7 7-7 7"
+- Every interactive element is at least 44px tall (min-h-11 or size-11)
+- Do not add md: or lg: variants not listed, never swap a value for a similar one
+- Both CTAs share identical padding and height so they line up side by side
 
-Format output: HANYA potongan HTML dalam satu blok kode, mulai komentar
-`<header class="sticky top-0 z-40 border-b border-border bg-background/80 text-foreground backdrop-blur">
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
-
-    <a href="#" class="flex items-center gap-2 text-base font-semibold tracking-tight">
-      <span class="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">◆</span>
-      <!-- ISI:1 -->
-    </a>
-
-    <nav class="hidden lg:block">
-      <ul class="flex items-center gap-8 text-sm text-muted-foreground">
-        <li><a href="#hero" class="transition-colors hover:text-foreground"><!-- ISI:2 --></a></li>
-        <li><a href="#hero" class="transition-colors hover:text-foreground"><!-- ISI:3 --></a></li>
-        <li><a href="#hero" class="transition-colors hover:text-foreground"><!-- ISI:4 --></a></li>
-      </ul>
-    </nav>
-
-    <div class="hidden items-center gap-3 lg:flex">
-      <a href="#" class="inline-flex min-h-11 items-center px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><!-- ISI:5 --></a>
-      <a href="#" class="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"><!-- ISI:6 --></a>
-    </div>
-
-    <details class="lg:hidden">
-      <summary class="grid size-11 cursor-pointer list-none place-items-center rounded-lg marker:content-none hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" aria-label="Buka menu">
-        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </summary>
-      <nav class="absolute inset-x-0 top-full border-b border-border bg-background px-6 py-4">
-        <ul class="flex flex-col gap-1 text-sm">
-          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-muted"><!-- ISI:2 --></a></li>
-          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-muted"><!-- ISI:3 --></a></li>
-          <li><a href="#hero" class="block rounded-lg px-3 py-3 hover:bg-muted"><!-- ISI:4 --></a></li>
-        </ul>
-        <a href="#" class="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground"><!-- ISI:6 --></a>
-      </nav>
-    </details>
-
-  </div>
-</header>
-
-<section id="hero" class="bg-background text-foreground py-16 md:py-24 lg:py-32">
-  <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 md:gap-12 lg:grid-cols-12 lg:gap-16 lg:px-8">
-
-    <div class="lg:col-span-6">
-
-      <span class="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-        <!-- ISI:7 -->
-      </span>
-
-      <h1 class="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
-        <!-- ISI:8 -->
-      </h1>
-
-      <p class="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
-        <!-- ISI:9 -->
-      </p>
-
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-6 sm:w-auto text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
-          <!-- ISI:10 -->
-        </a>
-        <a href="#" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border px-6 sm:w-auto text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
-          <!-- ISI:11 -->
-          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-
-      <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm text-muted-foreground">
-        <span><!-- ISI:12 --></span>
-        <span class="font-medium text-foreground"><!-- ISI:13 --></span>
-        <span class="font-medium text-foreground"><!-- ISI:14 --></span>
-        <span class="font-medium text-foreground"><!-- ISI:15 --></span>
-      </div>
-
-    </div>
-
-    <div class="lg:col-span-6">
-      <div class="aspect-[4/3] w-full rounded-xl border border-border bg-muted"></div>
-    </div>
-
-  </div>
-</section>
-```
-
----
-
-### BLOK 3 — TABEL COPY (teks literal, salin apa adanya)
-
-| Tanda | Teks pengganti |
-|---|---|
-| `ISI:1` | Acme |
-| `ISI:2` | Produk |
-| `ISI:3` | Harga |
-| `ISI:4` | Dokumentasi |
-| `ISI:5` | Masuk |
-| `ISI:6` | Mulai gratis |
-| `ISI:7` | Versi 2.0 |
-| `ISI:8` | `Ubah gambar desain<br>jadi web statis` |
-| `ISI:9` | Tailwind v4, tanpa satu baris JavaScript perilaku. Satu halaman penuh plus file terpisah per section. |
-| `ISI:10` | Mulai sekarang |
-| `ISI:11` | Lihat contoh |
-| `ISI:12` | Dipakai oleh |
-| `ISI:13` | Northwind |
-| `ISI:14` | Contoso |
-| `ISI:15` | Fabrikam |
-
-`ISI:8` berisi tag `<br>` — tulis apa adanya, jangan di-escape.
-Jangan menambah, memotong, atau memparafrase teks mana pun di tabel ini.
-
----
-
-### BLOK 4 — CEK SEBELUM MENGIRIM JAWABAN
-
-Ada yang gagal → perbaiki dulu, baru kirim.
-
-1. Output mulai `<header` dan berakhir `</section>`. Nol `<!doctype`, `<html>`, `<head>`, `<meta>`, `<title>`, `<body>`, `<script>`, `<style>`.
-2. Nol `onclick`, `addEventListener`, `javascript:`.
-3. Tidak ada `<!-- ISI:` tersisa; jumlah `<h1>` tepat 1.
-4. Setiap class di output ada juga di kerangka Blok 2 — nol class tambahan, nol `#hex` di dalam atribut `class`.
-5. Semua kelas `md:` dan `lg:` dari kerangka utuh (`md:py-24` `lg:py-32` `lg:grid-cols-12` `lg:col-span-6` `md:text-5xl` `lg:text-6xl` `lg:hidden` `lg:flex` `lg:block` `lg:px-8`).
-6. Urutan struktur utuh: `<header>` lalu `<section>`, tanpa div tambahan, tanpa teks di luar blok kode.
-
----
-
-### BLOK 5 — DUA KUNCI (ulangan)
-
-1. **POTONGAN saja.** Mulai `<header`, akhiri `</section>`. Tanpa `<!doctype>`, `<html>`, `<head>`, `<meta>`, `<body>`, `<script>`, `<style>`.
-2. **JANGAN ubah kerangka Blok 2.** Hanya ganti `<!-- ISI:n -->`. Class, tag, dan urutan tetap.
-
-## ▲ COPY SELESAI
+CONSTRAINTS:
+- Output the header and section markup only — no doctype, html, head, meta, title, body
+- No custom CSS, style attributes, or style blocks
+- No JavaScript — the mobile menu works only with details and summary
+- Icons are inline SVG only, no emoji or icon fonts
+- Use only Tailwind class names for styling, layout, responsiveness
